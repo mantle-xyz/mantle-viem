@@ -200,11 +200,11 @@ export default defineConfig({
 			items: [
 				{
 					text: "Changelog",
-					link: "https://github.com/mantle-xyz/mantle-viem/blob/main/src/CHANGELOG.md",
+					link: "https://github.com/mantle-xyz/mantle-viem/blob/main/CHANGELOG.md",
 				},
 				{
 					text: "Contributing",
-					link: "https://github.com/mantle-xyz/mantle-viem/blob/main/.github/CONTRIBUTING.md",
+					link: "https://github.com/mantle-xyz/mantle-viem/blob/main/CONTRIBUTING.md",
 				},
 			],
 		},
