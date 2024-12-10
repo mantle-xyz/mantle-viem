@@ -47,6 +47,5 @@ export const mantle = /*#__PURE__*/ defineChain({
 			blockCreated: 304717,
 		},
 	},
-	testnet: true,
 	sourceId,
 });

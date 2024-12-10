@@ -1,5 +1,5 @@
 {
-	"name": "mantle-viem-test",
+	"name": "mantle-viem",
 	"version": "0.0.1-alpha.0",
 	"type": "module",
 	"main": "./dist/cjs/index.js",
