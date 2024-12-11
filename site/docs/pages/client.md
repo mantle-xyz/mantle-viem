@@ -27,11 +27,11 @@ import { mantle } from 'mantle-viem/chains'
 import { createPublicClient, http } from 'viem'
 
 const publicClient = createPublicClient({
-  chain: base,
+  chain: mantle,
   transport: http(),
 }).extend(publicActionsL2()) // [!code hl]
 
-const l1Gas = await publicClient.estimateInitiateMNTWithdrawalGas({/* ... */})
+const args = await publicClient.buildProveWithdrawal({/* ... */})
 ```
 
 ## Extensions

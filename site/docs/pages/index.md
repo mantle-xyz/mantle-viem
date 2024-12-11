@@ -75,10 +75,5 @@ const client = createPublicClient({
   transport: http(),
 }).extend(publicActionsL2())
 
-const mntWithdrawalGas = await client.estimateInitiateMNTWithdrawalGas({ // [!code hl]
-  account: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', // [!code hl]
-  request: { // [!code hl]
-    amount: parseEther('1'), // [!code hl]
-  }, // [!code hl]
-}) // [!code hl]
+const args = await publicClient.buildProveWithdrawal({/* ... */}) // [!code hl]
 ```
