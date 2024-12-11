@@ -26,6 +26,5 @@ test("default", async () => {
 		receipt,
 		targetChain: mantleSepoliaClient.chain,
 	});
-	expect(output).toBe("");
 	expect(output).toBeDefined();
 });

@@ -52,8 +52,18 @@ function serializeTransactionDeposit(
 ): SerializeTransactionDepositReturnType {
 	assertTransactionDeposit(transaction);
 
-	const { sourceHash, data, from, gas, isSystemTx, mint, to, value, ethValue } =
-		transaction;
+	const {
+		sourceHash,
+		data,
+		from,
+		gas,
+		isSystemTx,
+		mint,
+		to,
+		value,
+		ethValue,
+		ethTxValue,
+	} = transaction;
 
 	const serializedTransaction: Hex[] = [
 		sourceHash,
@@ -66,6 +76,10 @@ function serializeTransactionDeposit(
 		ethValue ? toHex(ethValue) : "0x",
 		data ?? "0x",
 	];
+
+	if (ethTxValue) {
+		serializedTransaction.push(toHex(ethTxValue));
+	}
 
 	return concatHex([
 		"0x7e",

@@ -30,7 +30,7 @@ export function getL2TransactionHash({ log }: GetL2TransactionHashParameters) {
 		l1BlockHash: log.blockHash,
 		l1LogIndex: log.logIndex,
 	});
-	const { data, gas, isCreation, mint, value, ethValue } =
+	const { data, gas, isCreation, mint, value, ethValue, ethTxValue } =
 		opaqueDataToDepositData(log.args.opaqueData);
 
 	return keccak256(
@@ -45,6 +45,7 @@ export function getL2TransactionHash({ log }: GetL2TransactionHashParameters) {
 			type: "deposit",
 			value,
 			ethValue,
+			ethTxValue,
 		}),
 	);
 }

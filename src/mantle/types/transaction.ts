@@ -102,6 +102,7 @@ export type TransactionSerializableDeposit<
 	sourceHash: Hex;
 	type: "deposit";
 	ethValue?: bigint | undefined;
+	ethTxValue?: bigint | undefined;
 };
 
 export type TransactionSerializedDeposit = `0x7e${string}`;
