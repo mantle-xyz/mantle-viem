@@ -82,6 +82,18 @@ export default defineConfig({
 			text: "L1 Public Actions",
 			items: [
 				{
+					text: "estimateDepositETHGas",
+					link: "/actions/estimateDepositETHGas",
+				},
+				{
+					text: "estimateDepositMNTGas",
+					link: "/actions/estimateDepositMNTGas",
+				},
+				{
+					text: "estimateDepositERC20Gas",
+					link: "/actions/estimateDepositERC20Gas",
+				},
+				{
 					text: "estimateFinalizeWithdrawalGas",
 					link: "/actions/estimateFinalizeWithdrawalGas",
 				},

@@ -85,7 +85,12 @@ We can use the resulting `args` to prove the withdrawal transaction on the L1.
 :::code-group
 
 ```ts [example.ts]
-import { account, publicClientL1, publicClientL2, walletClientL1 } from './config'
+import {
+  account,
+  publicClientL1,
+  publicClientL2,
+  walletClientL1,
+} from './config'
 
 const receipt = await getTransactionReceipt(publicClientL2, {
   hash: '0xbbdd0957a82a057a76b5f093de251635ac4ddc6e2d0c4aa7fbf82d73e4e11039',
@@ -182,7 +187,7 @@ const [account] = await window.ethereum.request({ // [!code hl]
 
 export const publicClientL1 = createPublicClient({
   chain: mainnet,
-  transport: http()
+  transport: http(),
 }).extend(publicActionsL1())
 
 export const walletClientL1 = createWalletClient({

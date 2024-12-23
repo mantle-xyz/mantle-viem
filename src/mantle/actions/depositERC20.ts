@@ -16,6 +16,10 @@ import type { GetAccountParameter } from "../types/account.js";
 import type { GetContractAddressParameter } from "../types/contract.js";
 import type { DepositERC20Request } from "../types/deposit.js";
 import { parseDepositRequest } from "../utils/parseDepositRequest.js";
+import {
+	estimateDepositERC20Gas,
+	type EstimateDepositERC20GasParameters,
+} from "./estimateDepositERC20Gas.js";
 
 export type DepositERC20Parameters<
 	chain extends Chain | undefined = Chain | undefined,
@@ -69,7 +73,7 @@ export async function depositERC20<
 		maxFeePerGas,
 		maxPriorityFeePerGas,
 		nonce,
-		request: { l1Token, l2Token, amount },
+		request: { l1Token, l2Token, amount, to },
 		targetChain,
 	} = parameters;
 
@@ -86,7 +90,22 @@ export async function depositERC20<
 		l1Token,
 		l2Token,
 		amount,
+		to,
 	});
+
+	const gas_ =
+		typeof gas !== "number" && gas !== null
+			? await estimateDepositERC20Gas(client, {
+					request: {
+						l1Token,
+						l2Token,
+						amount,
+						to,
+					},
+					targetChain,
+					account,
+				} as EstimateDepositERC20GasParameters)
+			: undefined;
 
 	return writeContract(client, {
 		account: account!,
@@ -98,6 +117,6 @@ export async function depositERC20<
 		maxFeePerGas,
 		maxPriorityFeePerGas,
 		nonce,
-		gas: gas || undefined,
+		gas: gas_,
 	} satisfies WriteContractParameters as any);
 }

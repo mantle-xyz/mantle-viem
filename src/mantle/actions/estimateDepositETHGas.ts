@@ -71,7 +71,7 @@ export async function estimateDepositETHGas<
 		maxFeePerGas,
 		maxPriorityFeePerGas,
 		nonce,
-		request: { amount },
+		request: { amount, to },
 		targetChain,
 	} = parameters;
 
@@ -86,6 +86,7 @@ export async function estimateDepositETHGas<
 	const { functionName, args } = parseDepositRequest({
 		type: "eth",
 		amount,
+		to,
 	});
 
 	const params = {
@@ -102,6 +103,8 @@ export async function estimateDepositETHGas<
 		// in `estimateContractGas` or `estimateGas`
 		// @ts-ignore
 		chain,
+		// @ts-ignore
+		value: amount,
 	} satisfies EstimateContractGasParameters<
 		typeof l1StandardBridge,
 		typeof functionName

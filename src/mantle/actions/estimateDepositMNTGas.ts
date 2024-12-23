@@ -71,7 +71,7 @@ export async function estimateDepositMNTGas<
 		maxFeePerGas,
 		maxPriorityFeePerGas,
 		nonce,
-		request: { amount },
+		request: { amount, to },
 		targetChain,
 	} = parameters;
 
@@ -86,6 +86,7 @@ export async function estimateDepositMNTGas<
 	const { functionName, args } = parseDepositRequest({
 		type: "mnt",
 		amount,
+		to,
 	});
 
 	const params = {

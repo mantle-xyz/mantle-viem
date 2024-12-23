@@ -71,7 +71,7 @@ export async function estimateDepositERC20Gas<
 		maxFeePerGas,
 		maxPriorityFeePerGas,
 		nonce,
-		request: { l1Token, l2Token, amount },
+		request: { l1Token, l2Token, amount, to },
 		targetChain,
 	} = parameters;
 
@@ -88,6 +88,7 @@ export async function estimateDepositERC20Gas<
 		l1Token,
 		l2Token,
 		amount,
+		to,
 	});
 
 	const params = {

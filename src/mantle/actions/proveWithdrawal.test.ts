@@ -1,8 +1,19 @@
-import { getTransactionReceipt, mine, reset } from "viem/actions";
+import { createClient, http } from "viem";
+import { privateKeyToAccount } from "viem/accounts";
+import {
+	getTransactionReceipt,
+	mine,
+	reset,
+	waitForTransactionReceipt,
+} from "viem/actions";
+import { sepolia } from "viem/chains";
 import { beforeEach, expect, test } from "vitest";
 import { anvilSepolia } from "~test/src/anvil.js";
 import { accounts } from "~test/src/constants.js";
 import { mantleSepoliaTestnet } from "../chains/mantleSepoliaTestnet.js";
+import { getWithdrawals } from "../utils/getWithdrawals.js";
+import { buildProveWithdrawal } from "./buildProveWithdrawal.js";
+import { getL2Output } from "./getL2Output.js";
 import { proveWithdrawal } from "./proveWithdrawal.js";
 
 const sepoliaClient = anvilSepolia.getClient();
@@ -61,5 +72,50 @@ test("default", async () => {
 	const receipt = await getTransactionReceipt(sepoliaClient, {
 		hash,
 	});
+	expect(receipt.status).toEqual("success");
+});
+
+test.skip("e2e", async () => {
+	// to be replace
+	const l2hash =
+		"0x3c62de3bd3d2bc22bcdbe8d3fc7aa36a99236e4847802006ef0a6400a3a5199f";
+
+	const account = privateKeyToAccount(
+		process.env.VITE_ACCOUNT_PRIVATE_KEY as `0x${string}`,
+	);
+
+	const client_mantleSepolia = createClient({
+		chain: mantleSepoliaTestnet,
+		transport: http(),
+	});
+	const client_sepolia = createClient({
+		account,
+		chain: sepolia,
+		transport: http(process.env.VITE_ANVIL_FORK_URL_SEPOLIA),
+	});
+
+	const l2receipt = await getTransactionReceipt(client_mantleSepolia, {
+		hash: l2hash,
+	});
+
+	const [withdrawal] = getWithdrawals(l2receipt);
+
+	const output = await getL2Output(client_sepolia, {
+		l2BlockNumber: l2receipt.blockNumber,
+		targetChain: client_mantleSepolia.chain,
+	});
+
+	const args = await buildProveWithdrawal(client_mantleSepolia, {
+		account,
+		output,
+		withdrawal,
+	});
+
+	const hash = await proveWithdrawal(client_sepolia, args);
+
+	const receipt = await waitForTransactionReceipt(client_sepolia, {
+		hash: hash,
+	});
+
 	expect(receipt.status).toEqual("success");
 });

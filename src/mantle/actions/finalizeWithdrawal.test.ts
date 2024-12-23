@@ -1,8 +1,17 @@
-import { getTransactionReceipt, mine, reset } from "viem/actions";
+import { createClient, http } from "viem";
+import { privateKeyToAccount } from "viem/accounts";
+import {
+	getTransactionReceipt,
+	mine,
+	reset,
+	waitForTransactionReceipt,
+} from "viem/actions";
+import { sepolia } from "viem/chains";
 import { beforeEach, expect, test } from "vitest";
 import { anvilSepolia } from "~test/src/anvil.js";
 import { accounts } from "~test/src/constants.js";
 import { mantleSepoliaTestnet } from "../chains/mantleSepoliaTestnet.js";
+import { getWithdrawals } from "../utils/getWithdrawals.js";
 import { finalizeWithdrawal } from "./finalizeWithdrawal.js";
 
 const sepoliaClient = anvilSepolia.getClient();
@@ -40,5 +49,42 @@ test("default", async () => {
 	const receipt = await getTransactionReceipt(sepoliaClient, {
 		hash,
 	});
+	expect(receipt.status).toEqual("success");
+});
+
+test.skip("e2e", async () => {
+	// to be replace
+	const l2hash =
+		"0x0ced33e811485677bc0775bf430d9b3262bad3c630dc386883a4ac84a698b064";
+
+	const account = privateKeyToAccount(
+		process.env.VITE_ACCOUNT_PRIVATE_KEY as `0x${string}`,
+	);
+
+	const client_mantleSepolia = createClient({
+		chain: mantleSepoliaTestnet,
+		transport: http(),
+	});
+	const client_sepolia = createClient({
+		account,
+		chain: sepolia,
+		transport: http(process.env.VITE_ANVIL_FORK_URL_SEPOLIA),
+	});
+
+	const l2receipt = await getTransactionReceipt(client_mantleSepolia, {
+		hash: l2hash,
+	});
+
+	const [withdrawal] = getWithdrawals(l2receipt);
+
+	const hash = await finalizeWithdrawal(client_sepolia, {
+		targetChain: mantleSepoliaTestnet,
+		withdrawal,
+	});
+
+	const receipt = await waitForTransactionReceipt(client_sepolia, {
+		hash: hash,
+	});
+
 	expect(receipt.status).toEqual("success");
 });
