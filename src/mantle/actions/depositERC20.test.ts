@@ -44,6 +44,8 @@ test(
 			hash,
 		});
 
+		expect(receipt.status).toEqual("success");
+
 		const [log] = extractTransactionDepositedLogs(receipt);
 
 		const res = opaqueDataToDepositData(log.args.opaqueData);

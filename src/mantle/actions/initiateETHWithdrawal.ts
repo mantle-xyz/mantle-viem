@@ -67,12 +67,13 @@ export async function initiateETHWithdrawal<
 		maxFeePerGas,
 		maxPriorityFeePerGas,
 		nonce,
-		request: { amount },
+		request: { amount, to },
 	} = parameters;
 
 	const { functionName, args } = parseInitWithdrawequest({
 		type: "eth",
 		amount,
+		to,
 	});
 
 	return writeContract(client, {

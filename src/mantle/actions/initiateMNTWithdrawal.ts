@@ -67,12 +67,13 @@ export async function initiateMNTWithdrawal<
 		maxFeePerGas,
 		maxPriorityFeePerGas,
 		nonce,
-		request: { amount },
+		request: { amount, to },
 	} = parameters;
 
 	const { functionName, args } = parseInitWithdrawequest({
 		type: "mnt",
 		amount,
+		to,
 	});
 
 	return writeContract(client, {

@@ -11,11 +11,12 @@ import { anvilMantleSepolia } from "~test/src/anvil.js";
 import { accounts } from "~test/src/constants.js";
 import { mantleSepoliaTestnet } from "../chains/mantleSepoliaTestnet.js";
 import { extractWithdrawalMessageLogs } from "../utils/extractWithdrawalMessageLogs.js";
+import { estimateInitiateETHWithdrawalGas } from "./estimateInitiateETHWithdrawalGas.js";
 import { getTimeToProve } from "./getTimeToProve.js";
 import { initiateETHWithdrawal } from "./initiateETHWithdrawal.js";
 import { waitToProve } from "./waitToProve.js";
 
-describe.skip("e2e", () => {
+describe("e2e", () => {
 	const account = privateKeyToAccount(
 		(process.env.VITE_ACCOUNT_PRIVATE_KEY as `0x${string}`) ||
 			accounts[0].privateKey,
@@ -33,10 +34,18 @@ describe.skip("e2e", () => {
 	});
 
 	test("full", async () => {
+		const gas = await estimateInitiateETHWithdrawalGas(client_mantleSepolia, {
+			request: {
+				amount: parseEther("0.001"),
+			},
+			account: account.address,
+		});
+
 		const hash = await initiateETHWithdrawal(client_mantleSepolia, {
 			request: {
 				amount: parseEther("0.001"),
 			},
+			gas,
 		});
 
 		const receipt = await waitForTransactionReceipt(client_mantleSepolia, {

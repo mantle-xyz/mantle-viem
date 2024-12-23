@@ -16,10 +16,6 @@ import type { GetAccountParameter } from "../types/account.js";
 import type { GetContractAddressParameter } from "../types/contract.js";
 import type { DepositMNTRequest } from "../types/deposit.js";
 import { parseDepositRequest } from "../utils/parseDepositRequest.js";
-import {
-	estimateDepositMNTGas,
-	type EstimateDepositMNTGasParameters,
-} from "./estimateDepositMNTGas.js";
 
 export type DepositMNTParameters<
 	chain extends Chain | undefined = Chain | undefined,
@@ -46,9 +42,8 @@ export type DepositMNTParameters<
 		request: DepositMNTRequest;
 		/**
 		 * Gas limit for transaction execution on the L1.
-		 * `null` to skip gas estimation & defer calculation to signer.
 		 */
-		gas?: bigint | null | undefined;
+		gas?: bigint | undefined;
 	};
 export type DepositMNTReturnType = Hash;
 export type DepositMNTErrorType = WriteContractErrorType | ErrorType;
@@ -91,15 +86,6 @@ export async function depositMNT<
 		to,
 	});
 
-	const gas_ =
-		typeof gas !== "number" && gas !== null
-			? await estimateDepositMNTGas(client, {
-					request: { amount, to },
-					targetChain,
-					account,
-				} as EstimateDepositMNTGasParameters)
-			: undefined;
-
 	return writeContract(client, {
 		account: account!,
 		abi: l1StandardBridge,
@@ -110,6 +96,6 @@ export async function depositMNT<
 		maxFeePerGas,
 		maxPriorityFeePerGas,
 		nonce,
-		gas: gas_,
+		gas,
 	} satisfies WriteContractParameters as any);
 }

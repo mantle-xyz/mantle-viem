@@ -11,13 +11,13 @@ import { anvilMantleSepolia } from "~test/src/anvil.js";
 import { accounts } from "~test/src/constants.js";
 import { mantleSepoliaTestnet } from "../chains/mantleSepoliaTestnet.js";
 import { extractWithdrawalMessageLogs } from "../utils/extractWithdrawalMessageLogs.js";
+import { estimateInitiateMNTWithdrawalGas } from "./estimateInitiateMNTWithdrawalGas.js";
 import { getTimeToProve } from "./getTimeToProve.js";
 import { initiateMNTWithdrawal } from "./initiateMNTWithdrawal.js";
-import { waitToProve } from "./waitToProve.js";
 
 const mantleSepoliaClient = anvilMantleSepolia.getClient();
 
-test("default", async () => {
+test.skip("default", async () => {
 	const hash = await initiateMNTWithdrawal(mantleSepoliaClient, {
 		account: accounts[0].address,
 		request: {
@@ -50,16 +50,15 @@ test("default", async () => {
 	`);
 });
 
-describe.skip("e2e", () => {
+describe("e2e", () => {
 	const account = privateKeyToAccount(
-		(process.env.VITE_ACCOUNT_PRIVATE_KEY as `0x${string}`) ||
-			accounts[0].privateKey,
+		process.env.VITE_ACCOUNT_PRIVATE_KEY as `0x${string}`,
 	);
 
 	const client_mantleSepolia = createClient({
 		account,
 		chain: mantleSepoliaTestnet,
-		transport: http(),
+		transport: http(process.env.VITE_ANVIL_FORK_URL_MANTLE_SEPOLIA),
 	});
 	const client_sepolia = createClient({
 		account,
@@ -68,10 +67,19 @@ describe.skip("e2e", () => {
 	});
 
 	test("full", async () => {
+		const gas = await estimateInitiateMNTWithdrawalGas(client_mantleSepolia, {
+			request: {
+				amount: parseEther("0.001"),
+			},
+			account: account.address,
+		});
+
 		const hash = await initiateMNTWithdrawal(client_mantleSepolia, {
 			request: {
 				amount: parseEther("0.001"),
 			},
+			account,
+			gas,
 		});
 
 		const receipt = await waitForTransactionReceipt(client_mantleSepolia, {

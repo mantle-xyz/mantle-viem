@@ -46,9 +46,8 @@ export type DepositERC20Parameters<
 		request: DepositERC20Request;
 		/**
 		 * Gas limit for transaction execution on the L1.
-		 * `null` to skip gas estimation & defer calculation to signer.
 		 */
-		gas?: bigint | null | undefined;
+		gas?: bigint | undefined;
 	};
 export type DepositERC20ReturnType = Hash;
 export type DepositERC20ErrorType = WriteContractErrorType | ErrorType;
@@ -93,20 +92,6 @@ export async function depositERC20<
 		to,
 	});
 
-	const gas_ =
-		typeof gas !== "number" && gas !== null
-			? await estimateDepositERC20Gas(client, {
-					request: {
-						l1Token,
-						l2Token,
-						amount,
-						to,
-					},
-					targetChain,
-					account,
-				} as EstimateDepositERC20GasParameters)
-			: undefined;
-
 	return writeContract(client, {
 		account: account!,
 		abi: l1StandardBridge,
@@ -117,6 +102,6 @@ export async function depositERC20<
 		maxFeePerGas,
 		maxPriorityFeePerGas,
 		nonce,
-		gas: gas_,
+		gas,
 	} satisfies WriteContractParameters as any);
 }

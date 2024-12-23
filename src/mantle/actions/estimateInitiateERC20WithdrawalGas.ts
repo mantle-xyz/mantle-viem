@@ -74,13 +74,14 @@ export async function estimateInitiateERC20Withdrawal<
 		maxFeePerGas,
 		maxPriorityFeePerGas,
 		nonce,
-		request: { amount, l2Token },
+		request: { amount, l2Token, to },
 	} = parameters;
 
 	const { functionName, args } = parseInitWithdrawequest({
 		type: "erc20",
 		l2Token,
 		amount,
+		to,
 	});
 
 	const params = {

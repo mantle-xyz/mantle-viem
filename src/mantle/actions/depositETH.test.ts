@@ -1,12 +1,14 @@
 import { beforeAll, expect, test } from "vitest";
 
-import { encodePacked, parseEther } from "viem";
+import { createClient, encodePacked, http, parseEther } from "viem";
+import { privateKeyToAccount } from "viem/accounts";
 import {
 	mine,
 	reset,
 	setBalance,
 	waitForTransactionReceipt,
 } from "viem/actions";
+import { sepolia } from "viem/chains";
 import { anvilSepolia } from "~test/src/anvil.js";
 import { accounts } from "~test/src/constants.js";
 import { mantleSepoliaTestnet } from "../chains/mantleSepoliaTestnet.js";
@@ -66,6 +68,47 @@ test(
 		const [l2Hash] = getL2TransactionHashes(receipt);
 
 		expect(l2Hash).toBeDefined();
+	},
+	{ timeout: 1800000 },
+);
+
+test.skip(
+	"e2e mnt (sepolia)",
+	async () => {
+		const account = privateKeyToAccount(
+			process.env.VITE_ACCOUNT_PRIVATE_KEY as `0x${string}`,
+		);
+
+		const client_mantleSepolia = createClient({
+			chain: mantleSepoliaTestnet,
+			transport: http(),
+		});
+		const client_sepolia = createClient({
+			account,
+			chain: sepolia,
+			transport: http(process.env.VITE_ANVIL_FORK_URL_SEPOLIA),
+		});
+
+		const hash = await depositETH(client_sepolia, {
+			request: {
+				amount: parseEther("0.001"),
+			},
+			targetChain: mantleSepoliaTestnet,
+		});
+
+		expect(hash).toBeDefined();
+
+		const receipt = await waitForTransactionReceipt(client_sepolia, {
+			hash,
+		});
+
+		expect(receipt.status).toEqual("success");
+
+		const [l2Hash] = getL2TransactionHashes(receipt);
+
+		await waitForTransactionReceipt(client_mantleSepolia, {
+			hash: l2Hash,
+		});
 	},
 	{ timeout: 1800000 },
 );

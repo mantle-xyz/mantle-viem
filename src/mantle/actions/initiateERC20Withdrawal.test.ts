@@ -11,11 +11,12 @@ import { anvilMantleSepolia } from "~test/src/anvil.js";
 import { accounts } from "~test/src/constants.js";
 import { mantleSepoliaTestnet } from "../chains/mantleSepoliaTestnet.js";
 import { extractWithdrawalMessageLogs } from "../utils/extractWithdrawalMessageLogs.js";
+import { estimateInitiateERC20Withdrawal } from "./estimateInitiateERC20WithdrawalGas.js";
 import { getTimeToProve } from "./getTimeToProve.js";
 import { initiateERC20Withdrawal } from "./initiateERC20Withdrawal.js";
 import { waitToProve } from "./waitToProve.js";
 
-describe.skip("e2e", () => {
+describe("e2e", () => {
 	const account = privateKeyToAccount(
 		(process.env.VITE_ACCOUNT_PRIVATE_KEY as `0x${string}`) ||
 			accounts[0].privateKey,
@@ -33,11 +34,22 @@ describe.skip("e2e", () => {
 	});
 
 	test("full", async () => {
+		const gas = await estimateInitiateERC20Withdrawal(client_mantleSepolia, {
+			request: {
+				l2Token: "0x9EF6f9160Ba00B6621e5CB3217BB8b54a92B2828",
+				amount: parseEther("0.001"),
+				to: "0x5788817BcF6482da4E434e1CEF68E6f85a690b58",
+			},
+			account: account.address,
+		});
+
 		const hash = await initiateERC20Withdrawal(client_mantleSepolia, {
 			request: {
 				l2Token: "0x9EF6f9160Ba00B6621e5CB3217BB8b54a92B2828",
 				amount: parseEther("0.0001"),
+				to: "0x5788817BcF6482da4E434e1CEF68E6f85a690b58",
 			},
+			gas,
 		});
 
 		const receipt = await waitForTransactionReceipt(client_mantleSepolia, {

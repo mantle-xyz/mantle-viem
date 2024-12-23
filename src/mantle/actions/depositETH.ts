@@ -16,10 +16,6 @@ import type { GetAccountParameter } from "../types/account.js";
 import type { GetContractAddressParameter } from "../types/contract.js";
 import type { DepositETHRequest } from "../types/deposit.js";
 import { parseDepositRequest } from "../utils/parseDepositRequest.js";
-import {
-	estimateDepositETHGas,
-	type EstimateDepositETHGasParameters,
-} from "./estimateDepositETHGas.js";
 
 export type DepositETHParameters<
 	chain extends Chain | undefined = Chain | undefined,
@@ -48,7 +44,7 @@ export type DepositETHParameters<
 		 * Gas limit for transaction execution on the L1.
 		 * `null` to skip gas estimation & defer calculation to signer.
 		 */
-		gas?: bigint | null | undefined;
+		gas?: bigint | undefined;
 	};
 export type DepositETHReturnType = Hash;
 export type DepositETHErrorType = WriteContractErrorType | ErrorType;
@@ -88,16 +84,8 @@ export async function depositETH<
 	const { functionName, args } = parseDepositRequest({
 		type: "eth",
 		amount,
+		to,
 	});
-
-	const gas_ =
-		typeof gas !== "number" && gas !== null
-			? await estimateDepositETHGas(client, {
-					request: { amount, to },
-					targetChain,
-					account,
-				} as EstimateDepositETHGasParameters)
-			: undefined;
 
 	return writeContract(client, {
 		account: account!,
@@ -109,7 +97,7 @@ export async function depositETH<
 		maxFeePerGas,
 		maxPriorityFeePerGas,
 		nonce,
-		gas: gas_,
+		gas,
 		value: amount,
 	} satisfies WriteContractParameters as any);
 }

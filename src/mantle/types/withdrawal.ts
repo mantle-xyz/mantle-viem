@@ -5,6 +5,7 @@ export type InitialteWithdrawalRequest = {
 	/** L2 Transaction recipient. */
 	// to: Address;
 	amount: bigint;
+	to?: Address;
 } & (
 	| {
 			type: "mnt" | "eth";
@@ -21,12 +22,15 @@ export type InitiateERC20WithdrawalRequest = {
 	amount: bigint;
 	/** Other ERC20 L2 Token Address. */
 	l2Token: Address;
+	to?: Address;
 };
 export type InitiateMNTWithdrawalRequest = {
 	amount: bigint;
+	to?: Address;
 };
 export type InitiateETHWithdrawalRequest = {
 	amount: bigint;
+	to?: Address;
 };
 
 export type Withdrawal = {
