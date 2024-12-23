@@ -86,7 +86,7 @@ test.skip(
 		const client_sepolia = createClient({
 			account,
 			chain: sepolia,
-			transport: http(process.env.VITE_ANVIL_FORK_URL_SEPOLIA),
+			transport: http(),
 		});
 
 		const hash = await depositETH(client_sepolia, {

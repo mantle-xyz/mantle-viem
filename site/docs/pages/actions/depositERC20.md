@@ -134,6 +134,25 @@ const hash = await client.depositERC20({
 })
 ```
 
+### args.to (optional)
+
+- **Type:** `Address`
+
+L2 Transaction recipient.
+
+```ts
+const hash = await client.depositERC20({
+  account: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+  request: {
+    l1Token: '0x072d71b257ECa6B60b5333626F6a55ea1B0c451c',
+    l2Token: '0x9EF6f9160Ba00B6621e5CB3217BB8b54a92B2828',
+    amount: parseEther('1'),
+    to: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', // [!code focus]
+  },
+  targetChain: mantle,
+})
+```
+
 ### targetChain
 
 - **Type:** [`Chain`](https://viem.sh/docs/glossary/types#chain)
@@ -173,6 +192,26 @@ const hash = await client.depositERC20({
     amount: parseEther('1'),
   },
   chain: mainnet, // [!code focus]
+  targetChain: mantle,
+})
+```
+
+### gas (optional)
+
+- **Type:** `bigint`
+
+Gas limit for transaction execution on the L1.
+
+```ts
+const hash = await client.depositERC20({
+  account: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+  request: {
+    l1Token: '0x072d71b257ECa6B60b5333626F6a55ea1B0c451c',
+    l2Token: '0x9EF6f9160Ba00B6621e5CB3217BB8b54a92B2828',
+    amount: parseEther('1'),
+  },
+  gas: 420_000n, // [!code focus]
+  chain: mainnet,
   targetChain: mantle,
 })
 ```

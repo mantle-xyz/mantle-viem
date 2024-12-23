@@ -92,6 +92,23 @@ const hash = await client.depositMNT({
 })
 ```
 
+### args.to (optional)
+
+- **Type:** `Address`
+
+L2 Transaction recipient.
+
+```ts
+const hash = await client.depositMNT({
+  account: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+  request: {
+    amount: parseEther('1'),
+    to: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', // [!code focus]
+  },
+  targetChain: mantle,
+})
+```
+
 ### targetChain
 
 - **Type:** [`Chain`](https://viem.sh/docs/glossary/types#chain)
@@ -127,6 +144,24 @@ const hash = await client.depositMNT({
     amount: parseEther('1'),
   },
   chain: mainnet, // [!code focus]
+  targetChain: mantle,
+})
+```
+
+### gas (optional)
+
+- **Type:** `bigint`
+
+Gas limit for transaction execution on the L1.
+
+```ts
+const hash = await client.depositMNT({
+  account: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+  request: {
+    amount: parseEther('1'),
+  },
+  gas: 420_000n, // [!code focus]
+  chain: mainnet,
   targetChain: mantle,
 })
 ```

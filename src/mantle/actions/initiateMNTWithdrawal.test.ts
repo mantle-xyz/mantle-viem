@@ -58,7 +58,7 @@ describe("e2e", () => {
 	const client_mantleSepolia = createClient({
 		account,
 		chain: mantleSepoliaTestnet,
-		transport: http(process.env.VITE_ANVIL_FORK_URL_MANTLE_SEPOLIA),
+		transport: http(),
 	});
 	const client_sepolia = createClient({
 		account,

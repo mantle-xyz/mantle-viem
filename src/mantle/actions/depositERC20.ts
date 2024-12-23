@@ -16,10 +16,6 @@ import type { GetAccountParameter } from "../types/account.js";
 import type { GetContractAddressParameter } from "../types/contract.js";
 import type { DepositERC20Request } from "../types/deposit.js";
 import { parseDepositRequest } from "../utils/parseDepositRequest.js";
-import {
-	estimateDepositERC20Gas,
-	type EstimateDepositERC20GasParameters,
-} from "./estimateDepositERC20Gas.js";
 
 export type DepositERC20Parameters<
 	chain extends Chain | undefined = Chain | undefined,

@@ -42,7 +42,6 @@ export type DepositETHParameters<
 		request: DepositETHRequest;
 		/**
 		 * Gas limit for transaction execution on the L1.
-		 * `null` to skip gas estimation & defer calculation to signer.
 		 */
 		gas?: bigint | undefined;
 	};

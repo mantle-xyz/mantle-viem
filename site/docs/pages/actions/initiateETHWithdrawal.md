@@ -85,6 +85,23 @@ const hash = await client.initiateETHWithdrawal({
 })
 ```
 
+### args.to (optional)
+
+- **Type:** `Address`
+
+L1 Transaction recipient.
+
+```ts
+const hash = await client.initiateETHWithdrawal({
+  account: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+  request: {
+    amount: parseEther('1'),
+    to: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266', // [!code focus]
+  },
+  targetChain: mantle,
+})
+```
+
 ### chain (optional)
 
 - **Type:** [`Chain`](https://viem.sh/docs/glossary/types#chain)

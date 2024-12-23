@@ -13,6 +13,7 @@ import { accounts } from "~test/src/constants.js";
 import { mantleSepoliaTestnet } from "../chains/mantleSepoliaTestnet.js";
 import { getWithdrawals } from "../utils/getWithdrawals.js";
 import { buildProveWithdrawal } from "./buildProveWithdrawal.js";
+import { estimateProveWithdrawalGas } from "./estimateProveWithdrawalGas.js";
 import { getL2Output } from "./getL2Output.js";
 import { proveWithdrawal } from "./proveWithdrawal.js";
 
@@ -78,7 +79,7 @@ test("default", async () => {
 test.skip("e2e", async () => {
 	// to be replace
 	const l2hash =
-		"0x3c62de3bd3d2bc22bcdbe8d3fc7aa36a99236e4847802006ef0a6400a3a5199f";
+		"0x50b90fb9481714ebda776ac207e624189958854eb86c53e054ff96686bdab724";
 
 	const account = privateKeyToAccount(
 		process.env.VITE_ACCOUNT_PRIVATE_KEY as `0x${string}`,
@@ -91,7 +92,7 @@ test.skip("e2e", async () => {
 	const client_sepolia = createClient({
 		account,
 		chain: sepolia,
-		transport: http(process.env.VITE_ANVIL_FORK_URL_SEPOLIA),
+		transport: http(),
 	});
 
 	const l2receipt = await getTransactionReceipt(client_mantleSepolia, {
@@ -111,7 +112,12 @@ test.skip("e2e", async () => {
 		withdrawal,
 	});
 
-	const hash = await proveWithdrawal(client_sepolia, args);
+	const gas = await estimateProveWithdrawalGas(client_sepolia, args);
+
+	const hash = await proveWithdrawal(client_sepolia, {
+		...args,
+		gas,
+	});
 
 	const receipt = await waitForTransactionReceipt(client_sepolia, {
 		hash: hash,

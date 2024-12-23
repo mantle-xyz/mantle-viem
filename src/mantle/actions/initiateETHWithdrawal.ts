@@ -38,7 +38,6 @@ export type InitiateETHWithdrawalParameters<
 	GetChainParameter<chain, chainOverride> & {
 		/**
 		 * Gas limit for transaction execution on the L2.
-		 * `null` to skip gas estimation & defer calculation to signer.
 		 */
 		gas?: bigint | undefined;
 		/** Withdrawal request. Supplied to the L2ToL1MessagePasser `initiateETHWithdrawal` method. */

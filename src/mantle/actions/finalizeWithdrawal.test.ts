@@ -12,6 +12,7 @@ import { anvilSepolia } from "~test/src/anvil.js";
 import { accounts } from "~test/src/constants.js";
 import { mantleSepoliaTestnet } from "../chains/mantleSepoliaTestnet.js";
 import { getWithdrawals } from "../utils/getWithdrawals.js";
+import { estimateFinalizeWithdrawalGas } from "./estimateFinalizeWithdrawalGas.js";
 import { finalizeWithdrawal } from "./finalizeWithdrawal.js";
 
 const sepoliaClient = anvilSepolia.getClient();
@@ -55,7 +56,7 @@ test("default", async () => {
 test.skip("e2e", async () => {
 	// to be replace
 	const l2hash =
-		"0x0ced33e811485677bc0775bf430d9b3262bad3c630dc386883a4ac84a698b064";
+		"0xd05ca5a684056d16063818d2fda4d40e04b186c43f5876499e0c197e9e8d985e";
 
 	const account = privateKeyToAccount(
 		process.env.VITE_ACCOUNT_PRIVATE_KEY as `0x${string}`,
@@ -68,7 +69,7 @@ test.skip("e2e", async () => {
 	const client_sepolia = createClient({
 		account,
 		chain: sepolia,
-		transport: http(process.env.VITE_ANVIL_FORK_URL_SEPOLIA),
+		transport: http(),
 	});
 
 	const l2receipt = await getTransactionReceipt(client_mantleSepolia, {
@@ -77,9 +78,16 @@ test.skip("e2e", async () => {
 
 	const [withdrawal] = getWithdrawals(l2receipt);
 
+	const gas = await estimateFinalizeWithdrawalGas(client_sepolia, {
+		targetChain: mantleSepoliaTestnet,
+		withdrawal,
+		account: account.address,
+	});
+
 	const hash = await finalizeWithdrawal(client_sepolia, {
 		targetChain: mantleSepoliaTestnet,
 		withdrawal,
+		gas,
 	});
 
 	const receipt = await waitForTransactionReceipt(client_sepolia, {

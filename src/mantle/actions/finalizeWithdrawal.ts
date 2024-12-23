@@ -15,11 +15,7 @@ import type { ErrorType } from "../errors/utils.js";
 import type { GetAccountParameter } from "../types/account.js";
 import type { GetContractAddressParameter } from "../types/contract.js";
 import type { Withdrawal } from "../types/withdrawal.js";
-import {
-	estimateFinalizeWithdrawalGas,
-	type EstimateFinalizeWithdrawalGasErrorType,
-	type EstimateFinalizeWithdrawalGasParameters,
-} from "./estimateFinalizeWithdrawalGas.js";
+import type { EstimateFinalizeWithdrawalGasErrorType } from "./estimateFinalizeWithdrawalGas.js";
 
 export type FinalizeWithdrawalParameters<
 	chain extends Chain | undefined = Chain | undefined,
@@ -44,9 +40,8 @@ export type FinalizeWithdrawalParameters<
 	GetContractAddressParameter<_derivedChain, "portal"> & {
 		/**
 		 * Gas limit for transaction execution on the L1.
-		 * `null` to skip gas estimation & defer calculation to signer.
 		 */
-		gas?: bigint | null | undefined;
+		gas?: bigint | undefined;
 		withdrawal: Withdrawal;
 	};
 export type FinalizeWithdrawalReturnType = Hash;
@@ -85,14 +80,6 @@ export async function finalizeWithdrawal<
 		return Object.values(targetChain!.contracts.portal)[0].address;
 	})();
 
-	const gas_ =
-		typeof gas !== "number" && gas !== null
-			? await estimateFinalizeWithdrawalGas(
-					client,
-					parameters as EstimateFinalizeWithdrawalGasParameters,
-				)
-			: undefined;
-
 	return writeContract(client, {
 		account: account!,
 		abi: portalAbi,
@@ -100,7 +87,7 @@ export async function finalizeWithdrawal<
 		chain,
 		functionName: "finalizeWithdrawalTransaction",
 		args: [withdrawal],
-		gas: gas_,
+		gas,
 		maxFeePerGas,
 		maxPriorityFeePerGas,
 		nonce,

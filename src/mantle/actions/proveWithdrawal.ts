@@ -14,11 +14,7 @@ import type { ErrorType } from "../errors/utils.js";
 import type { GetAccountParameter } from "../types/account.js";
 import type { GetContractAddressParameter } from "../types/contract.js";
 import type { Withdrawal } from "../types/withdrawal.js";
-import {
-	estimateProveWithdrawalGas,
-	type EstimateProveWithdrawalGasErrorType,
-	type EstimateProveWithdrawalGasParameters,
-} from "./estimateProveWithdrawalGas.js";
+import type { EstimateProveWithdrawalGasErrorType } from "./estimateProveWithdrawalGas.js";
 
 export type ProveWithdrawalParameters<
 	chain extends Chain | undefined = Chain | undefined,
@@ -45,9 +41,8 @@ export type ProveWithdrawalParameters<
 	GetContractAddressParameter<_derivedChain, "portal"> & {
 		/**
 		 * Gas limit for transaction execution on the L1.
-		 * `null` to skip gas estimation & defer calculation to signer.
 		 */
-		gas?: bigint | null | undefined;
+		gas?: bigint | undefined;
 		l2OutputIndex: bigint;
 		outputRootProof: {
 			version: Hex;
@@ -97,14 +92,6 @@ export async function proveWithdrawal<
 		return Object.values(targetChain!.contracts.portal)[0].address;
 	})();
 
-	const gas_ =
-		typeof gas !== "bigint" && gas !== null
-			? await estimateProveWithdrawalGas(
-					client,
-					parameters as EstimateProveWithdrawalGasParameters,
-				)
-			: gas ?? undefined;
-
 	return writeContract(client, {
 		account: account!,
 		abi: portalAbi,
@@ -112,7 +99,7 @@ export async function proveWithdrawal<
 		chain,
 		functionName: "proveWithdrawalTransaction",
 		args: [withdrawal, l2OutputIndex, outputRootProof, withdrawalProof],
-		gas: gas_,
+		gas,
 		maxFeePerGas,
 		maxPriorityFeePerGas,
 		nonce,

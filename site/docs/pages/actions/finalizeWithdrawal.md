@@ -169,8 +169,6 @@ const hash = await client.finalizeWithdrawal({
 
 Gas limit for transaction execution on the L1.
 
-`null` to skip gas estimation & defer calculation to signer.
-
 ```ts
 const hash = await client.finalizeWithdrawal({
   account: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',

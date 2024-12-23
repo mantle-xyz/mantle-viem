@@ -38,7 +38,6 @@ describe("e2e", () => {
 			request: {
 				l2Token: "0x9EF6f9160Ba00B6621e5CB3217BB8b54a92B2828",
 				amount: parseEther("0.001"),
-				to: "0x5788817BcF6482da4E434e1CEF68E6f85a690b58",
 			},
 			account: account.address,
 		});
@@ -47,7 +46,6 @@ describe("e2e", () => {
 			request: {
 				l2Token: "0x9EF6f9160Ba00B6621e5CB3217BB8b54a92B2828",
 				amount: parseEther("0.0001"),
-				to: "0x5788817BcF6482da4E434e1CEF68E6f85a690b58",
 			},
 			gas,
 		});
