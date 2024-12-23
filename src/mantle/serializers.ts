@@ -84,7 +84,8 @@ export function assertTransactionDeposit(
 	transaction: TransactionSerializableDeposit,
 ) {
 	const { from, to } = transaction;
-	if (from && !isAddress(from))
+	if (from && !isAddress(from)) {
 		throw new InvalidAddressError({ address: from });
+	}
 	if (to && !isAddress(to)) throw new InvalidAddressError({ address: to });
 }
