@@ -1,52 +1,31 @@
+import { getTransactionReceipt, reset } from "viem/actions";
 import { expect, test } from "vitest";
-import {
-	anvilMainnet,
-	anvilOptimism,
-	anvilOptimismSepolia,
-	anvilSepolia,
-} from "../../../test/src/anvil.js";
-import { getTransactionReceipt, reset } from "../../actions/index.js";
+import { anvilMantleSepolia, anvilSepolia } from "~test/src/anvil.js";
 
 import { getTimeToProve } from "./getTimeToProve.js";
 
-const client = anvilMainnet.getClient();
 const sepoliaClient = anvilSepolia.getClient();
-const optimismClient = anvilOptimism.getClient();
-const optimismSepoliaClient = anvilOptimismSepolia.getClient();
+const mantleSepoliaClient = anvilMantleSepolia.getClient();
 
 test("default", async () => {
 	await reset(sepoliaClient, {
-		blockNumber: 5528129n,
+		blockNumber: 6626270n,
 		jsonRpcUrl: anvilSepolia.forkUrl,
 	});
+	await reset(mantleSepoliaClient, {
+		blockNumber: 11997559n,
+		jsonRpcUrl: anvilMantleSepolia.forkUrl,
+	});
 
-	// https://sepolia-optimism.etherscan.io/tx/0x0cb90819569b229748c16caa26c9991fb8674581824d31dc9339228bb4e77731
-	const receipt = await getTransactionReceipt(optimismSepoliaClient, {
-		hash: "0x0cb90819569b229748c16caa26c9991fb8674581824d31dc9339228bb4e77731",
+	// https://sepolia.mantlescan.xyz/tx/0x90a949af815b4715ff6686a0dbafec0d3d9d7c33fe9911a3d172b5584e9f6cbb
+	const receipt = await getTransactionReceipt(mantleSepoliaClient, {
+		hash: "0x90a949af815b4715ff6686a0dbafec0d3d9d7c33fe9911a3d172b5584e9f6cbb",
 	});
 
 	const time = await getTimeToProve(sepoliaClient, {
 		receipt,
-		targetChain: optimismSepoliaClient.chain,
+		targetChain: mantleSepoliaClient.chain,
 	});
 
-	expect(time).toBeDefined();
-});
-
-test("legacy (portal v2)", async () => {
-	await reset(client, {
-		blockNumber: 18772363n,
-		jsonRpcUrl: anvilMainnet.forkUrl,
-	});
-
-	// https://optimistic.etherscan.io/tx/0x7b5cedccfaf9abe6ce3d07982f57bcb9176313b019ff0fc602a0b70342fe3147
-	const receipt = await getTransactionReceipt(optimismClient, {
-		hash: "0x7b5cedccfaf9abe6ce3d07982f57bcb9176313b019ff0fc602a0b70342fe3147",
-	});
-
-	const time = await getTimeToProve(client, {
-		receipt,
-		targetChain: optimismClient.chain,
-	});
 	expect(time).toBeDefined();
 });

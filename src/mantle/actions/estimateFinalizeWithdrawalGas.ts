@@ -1,21 +1,18 @@
-import type { Address } from "abitype";
+import type { Address } from "viem";
+import type { Client } from "viem";
+import type { Transport } from "viem";
+import type { Account } from "viem";
+import type { Chain, DeriveChain, GetChainParameter } from "viem";
+import type { UnionEvaluate, UnionOmit } from "viem";
 import {
 	estimateContractGas,
 	type EstimateContractGasErrorType,
 	type EstimateContractGasParameters,
-} from "../../actions/public/estimateContractGas.js";
-import type { Client } from "../../clients/createClient.js";
-import type { Transport } from "../../clients/transports/createTransport.js";
-import type { ErrorType } from "../../errors/utils.js";
-import type { Account, GetAccountParameter } from "../../types/account.js";
-import type {
-	Chain,
-	DeriveChain,
-	GetChainParameter,
-} from "../../types/chain.js";
-import type { UnionEvaluate, UnionOmit } from "../../types/utils.js";
-import type { FormattedTransactionRequest } from "../../utils/formatters/transactionRequest.js";
+} from "viem/actions";
+import type { FormattedTransactionRequest } from "viem/utils";
 import { portalAbi } from "../abis.js";
+import type { ErrorType } from "../errors/utils.js";
+import type { GetAccountParameter } from "../types/account.js";
 import type { GetContractAddressParameter } from "../types/contract.js";
 import type { Withdrawal } from "../types/withdrawal.js";
 
@@ -50,29 +47,9 @@ export type EstimateFinalizeWithdrawalGasErrorType =
 	| ErrorType;
 
 /**
- * Estimates gas required to finalize a withdrawal that occurred on an L2.
- *
- * - Docs: https://viem.sh/op-stack/actions/estimateFinalizeWithdrawalGas
- *
  * @param client - Client to use
  * @param parameters - {@link EstimateFinalizeWithdrawalGasParameters}
  * @returns Estimated gas. {@link EstimateFinalizeWithdrawalGasReturnType}
- *
- * @example
- * import { createPublicClient, http, parseEther } from 'viem'
- * import { base, mainnet } from 'viem/chains'
- * import { estimateFinalizeWithdrawalGas } from 'viem/op-stack'
- *
- * const client = createPublicClient({
- *   chain: mainnet,
- *   transport: http(),
- * })
- *
- * const gas = await estimateFinalizeWithdrawalGas(client, {
- *   account: '0xA0Cf798816D4b9b9866b5330EEa46a18382f251e',
- *   targetChain: optimism,
- *   withdrawal: { ... },
- * })
  */
 export async function estimateFinalizeWithdrawalGas<
 	chain extends Chain | undefined,

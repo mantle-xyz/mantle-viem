@@ -1,11 +1,11 @@
-import type { FeeValuesEIP1559 } from "../../types/fee.js";
-import type { Hex } from "../../types/misc.js";
+import type { FeeValuesEIP1559 } from "viem";
+import type { Hex } from "viem";
 import type {
 	Index,
 	Quantity,
 	RpcTransaction as RpcTransaction_,
 	RpcTransactionReceipt,
-} from "../../types/rpc.js";
+} from "viem";
 import type {
 	Transaction as Transaction_,
 	TransactionBase,
@@ -14,8 +14,8 @@ import type {
 	TransactionSerializableBase,
 	TransactionSerialized,
 	TransactionType,
-} from "../../types/transaction.js";
-import type { OneOf } from "../../types/utils.js";
+} from "viem";
+import type { OneOf } from "viem";
 
 type RpcTransaction<pending extends boolean = boolean> =
 	RpcTransaction_<pending> & {
@@ -101,6 +101,8 @@ export type TransactionSerializableDeposit<
 	mint?: bigint | undefined;
 	sourceHash: Hex;
 	type: "deposit";
+	ethValue?: bigint | undefined;
+	ethTxValue?: bigint | undefined;
 };
 
 export type TransactionSerializedDeposit = `0x7e${string}`;

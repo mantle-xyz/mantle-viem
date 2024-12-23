@@ -1,15 +1,10 @@
-import type { Client } from "../../clients/createClient.js";
-import type { Transport } from "../../clients/transports/createTransport.js";
-import { ContractFunctionRevertedError } from "../../errors/contract.js";
-import type { ErrorType } from "../../errors/utils.js";
-import type { Account } from "../../types/account.js";
-import type {
-	Chain,
-	DeriveChain,
-	GetChainParameter,
-} from "../../types/chain.js";
-import { poll } from "../../utils/poll.js";
+import type { Client, Transport } from "viem";
+import { ContractFunctionRevertedError } from "viem";
+import type { Account } from "viem";
+import type { Chain, DeriveChain, GetChainParameter } from "viem";
+import type { ErrorType } from "../errors/utils.js";
 import type { GetContractAddressParameter } from "../types/contract.js";
+import { poll } from "../utils/poll.js";
 import {
 	getL2Output,
 	type GetL2OutputErrorType,
@@ -49,34 +44,9 @@ export type WaitForNextL2OutputErrorType =
 	| ErrorType;
 
 /**
- * Waits for the next L2 output (after the provided block number) to be submitted.
- *
- * - Docs: https://viem.sh/op-stack/actions/waitForNextL2Output
- *
  * @param client - Client to use
  * @param parameters - {@link WaitForNextL2OutputParameters}
  * @returns The L2 transaction hash. {@link WaitForNextL2OutputReturnType}
- *
- * @example
- * import { createPublicClient, http } from 'viem'
- * import { getBlockNumber } from 'viem/actions'
- * import { mainnet, optimism } from 'viem/chains'
- * import { waitForNextL2Output } from 'viem/op-stack'
- *
- * const publicClientL1 = createPublicClient({
- *   chain: mainnet,
- *   transport: http(),
- * })
- * const publicClientL2 = createPublicClient({
- *   chain: optimism,
- *   transport: http(),
- * })
- *
- * const l2BlockNumber = await getBlockNumber(publicClientL2)
- * await waitForNextL2Output(publicClientL1, {
- *   l2BlockNumber,
- *   targetChain: optimism
- * })
  */
 export async function waitForNextL2Output<
 	chain extends Chain | undefined,

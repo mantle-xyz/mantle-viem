@@ -1,6 +1,6 @@
-import type { Block, BlockTag } from "../../types/block.js";
-import type { Hash } from "../../types/misc.js";
-import type { RpcBlock } from "../../types/rpc.js";
+import type { Block, BlockTag } from "viem";
+import type { Hash } from "viem";
+import type { RpcBlock } from "viem";
 import type {
 	OpStackRpcTransaction,
 	OpStackTransaction,

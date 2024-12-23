@@ -1,13 +1,11 @@
-import type { ErrorType } from "../../errors/utils.js";
-import type { Hash } from "../../types/misc.js";
 import {
 	encodeAbiParameters,
 	type EncodeAbiParametersErrorType,
-} from "../../utils/abi/encodeAbiParameters.js";
-import {
 	keccak256,
 	type Keccak256ErrorType,
-} from "../../utils/hash/keccak256.js";
+} from "viem";
+import type { Hash } from "viem";
+import type { ErrorType } from "../errors/utils.js";
 
 export type GetWithdrawalHashStorageSlotParameters = {
 	withdrawalHash: Hash;

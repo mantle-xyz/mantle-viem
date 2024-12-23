@@ -1,8 +1,12 @@
-import type { ErrorType } from "../../errors/utils.js";
-import type { Hex } from "../../types/misc.js";
-import { size, type SizeErrorType } from "../../utils/data/size.js";
-import { slice, type SliceErrorType } from "../../utils/data/slice.js";
-import { hexToBigInt } from "../../utils/encoding/fromHex.js";
+import {
+	hexToBigInt,
+	size,
+	type SizeErrorType,
+	slice,
+	type SliceErrorType,
+} from "viem";
+import type { Hex } from "viem";
+import type { ErrorType } from "../errors/utils.js";
 
 export type OpaqueDataToDepositDataParameters = Hex;
 
@@ -12,6 +16,8 @@ export type OpaqueDataToDepositDataReturnType = {
 	gas: bigint;
 	isCreation: boolean;
 	data: Hex;
+	ethValue: bigint;
+	ethTxValue: bigint;
 };
 
 export type OpaqueDataToDepositDataErrorType =
@@ -27,9 +33,14 @@ export function opaqueDataToDepositData(
 	offset += 32;
 	const value = slice(opaqueData, offset, offset + 32);
 	offset += 32;
+	const ethValue = slice(opaqueData, offset, offset + 32);
+	offset += 32;
+	const ethTxValue = slice(opaqueData, offset, offset + 32);
+	offset += 32;
 	const gas = slice(opaqueData, offset, offset + 8);
 	offset += 8;
-	const isCreation = BigInt(slice(opaqueData, offset, offset + 1)) === 1n;
+	const isCreation =
+		BigInt(slice(opaqueData, offset, offset + 1)) === BigInt(1);
 	offset += 1;
 	const data =
 		offset > size(opaqueData) - 1
@@ -41,5 +52,7 @@ export function opaqueDataToDepositData(
 		gas: hexToBigInt(gas),
 		isCreation,
 		data,
+		ethValue: hexToBigInt(ethValue),
+		ethTxValue: hexToBigInt(ethTxValue),
 	};
 }

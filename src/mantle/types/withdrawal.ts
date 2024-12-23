@@ -1,30 +1,44 @@
-import type { Address } from "abitype";
-import type { Hex } from "../../types/misc.js";
+import type { Address } from "viem";
+import type { Hex } from "viem";
 
-export type Game = {
-	index: bigint;
-	metadata: Hex;
-	timestamp: bigint;
-	rootClaim: Hex;
-	extraData: Hex;
+export type InitialteWithdrawalRequest = {
+	/** L2 Transaction recipient. */
+	// to: Address;
+	amount: bigint;
+	to?: Address;
+} & (
+	| {
+			type: "mnt" | "eth";
+			l2Token?: undefined;
+	  }
+	| {
+			type: "erc20";
+			/** Other ERC20 L2 Token Address. */
+			l2Token: Address;
+	  }
+);
+
+export type InitiateERC20WithdrawalRequest = {
+	amount: bigint;
+	/** Other ERC20 L2 Token Address. */
+	l2Token: Address;
+	to?: Address;
 };
-
-export type WithdrawalRequest = {
-	/** Encoded contract method & arguments. */
-	data?: Hex | undefined;
-	/** Gas limit for transaction execution on the L1. */
-	gas: bigint;
-	/** L1 Transaction recipient. */
-	to: Address;
-	/** Value in wei to withdrawal to the L1. Debited from the caller's L2 balance. */
-	value?: bigint | undefined;
+export type InitiateMNTWithdrawalRequest = {
+	amount: bigint;
+	to?: Address;
+};
+export type InitiateETHWithdrawalRequest = {
+	amount: bigint;
+	to?: Address;
 };
 
 export type Withdrawal = {
 	nonce: bigint;
 	sender: Hex;
 	target: Hex;
-	value: bigint;
+	mntValue: bigint;
+	ethValue: bigint;
 	gasLimit: bigint;
 	data: Hex;
 	withdrawalHash: Hex;

@@ -1,37 +1,23 @@
-import type { Address } from "abitype";
+import type { Address } from "viem";
+import { type Client, fromRlp, keccak256, toRlp, type Transport } from "viem";
+import type { Account, DeriveAccount } from "viem";
+import type { Chain, DeriveChain, GetChainParameter } from "viem";
+import type { Hex } from "viem";
+import type { OneOf, Prettify } from "viem";
 import {
 	getBlock,
 	type GetBlockErrorType,
-} from "../../actions/public/getBlock.js";
-import {
 	getProof,
 	type GetProofErrorType,
-} from "../../actions/public/getProof.js";
-import type { Client } from "../../clients/createClient.js";
-import type { Transport } from "../../clients/transports/createTransport.js";
-import type { ErrorType } from "../../errors/utils.js";
-import type {
-	Account,
-	DeriveAccount,
-	GetAccountParameter,
-} from "../../types/account.js";
-import type {
-	Chain,
-	DeriveChain,
-	GetChainParameter,
-} from "../../types/chain.js";
-import type { Hex } from "../../types/misc.js";
-import type { OneOf, Prettify } from "../../types/utils.js";
-import { fromRlp } from "../../utils/encoding/fromRlp.js";
-import { toRlp } from "../../utils/encoding/toRlp.js";
-import { keccak256 } from "../../utils/hash/keccak256.js";
+} from "viem/actions";
 import { contracts } from "../contracts.js";
+import type { ErrorType } from "../errors/utils.js";
+import type { GetAccountParameter } from "../types/account.js";
 import type { Withdrawal } from "../types/withdrawal.js";
 import {
 	getWithdrawalHashStorageSlot,
 	type GetWithdrawalHashStorageSlotErrorType,
 } from "../utils/getWithdrawalHashStorageSlot.js";
-import type { GetGameReturnType } from "./getGame.js";
 import type { GetL2OutputReturnType } from "./getL2Output.js";
 import type { ProveWithdrawalParameters } from "./proveWithdrawal.js";
 
@@ -50,7 +36,7 @@ export type BuildProveWithdrawalParameters<
 > = GetAccountParameter<account, accountOverride, false> &
 	GetChainParameter<chain, chainOverride> & {
 		withdrawal: Withdrawal;
-	} & OneOf<{ output: GetL2OutputReturnType } | { game: GetGameReturnType }>;
+	} & OneOf<{ output: GetL2OutputReturnType }>;
 
 export type BuildProveWithdrawalReturnType<
 	chain extends Chain | undefined = Chain | undefined,
@@ -79,26 +65,9 @@ export type BuildProveWithdrawalErrorType =
 /**
  * Builds the transaction that proves a withdrawal was initiated on an L2. Used in the Withdrawal flow.
  *
- * - Docs: https://viem.sh/op-stack/actions/buildProveWithdrawal
- *
  * @param client - Client to use
  * @param parameters - {@link BuildProveWithdrawalParameters}
  * @returns The prove withdraw transaction request. {@link BuildProveWithdrawalReturnType}
- *
- * @example
- * import { createPublicClient, http } from 'viem'
- * import { optimism } from 'viem/chains'
- * import { buildProveWithdrawal } from 'viem/op-stack'
- *
- * const publicClientL2 = createPublicClient({
- *   chain: optimism,
- *   transport: http(),
- * })
- *
- * const args = await buildProveWithdrawal(publicClientL2, {
- *   output: { ... },
- *   withdrawal: { ... },
- * })
  */
 export async function buildProveWithdrawal<
 	chain extends Chain | undefined,
@@ -116,10 +85,10 @@ export async function buildProveWithdrawal<
 ): Promise<
 	BuildProveWithdrawalReturnType<chain, account, chainOverride, accountOverride>
 > {
-	const { account, chain = client.chain, game, output, withdrawal } = args;
+	const { account, chain = client.chain, output, withdrawal } = args;
 
 	const { withdrawalHash } = withdrawal;
-	const { l2BlockNumber } = game ?? output;
+	const { l2BlockNumber } = output;
 
 	const slot = getWithdrawalHashStorageSlot({ withdrawalHash });
 	const [proof, block] = await Promise.all([
@@ -135,7 +104,7 @@ export async function buildProveWithdrawal<
 
 	return {
 		account,
-		l2OutputIndex: game?.index ?? output?.outputIndex,
+		l2OutputIndex: output?.outputIndex,
 		outputRootProof: {
 			latestBlockhash: block.hash,
 			messagePasserStorageRoot: proof.storageHash,

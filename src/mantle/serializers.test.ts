@@ -1,20 +1,20 @@
-import { describe, expect, test } from "vitest";
-import { accounts } from "../../test/src/constants.js";
-import { getTransaction } from "../actions/index.js";
-import { base } from "../chains/index.js";
 import {
 	createPublicClient,
 	http,
 	keccak256,
 	parseEther,
 	parseGwei,
-} from "../index.js";
+} from "viem";
+import { getTransaction } from "viem/actions";
+import { base } from "viem/chains";
+import { describe, expect, test } from "vitest";
+import { accounts } from "../../test/src/constants.js";
 import { parseTransaction } from "./parsers.js";
 import { serializeTransaction } from "./serializers.js";
 import type { TransactionSerializableDeposit } from "./types/transaction.js";
 
 describe("deposit", async () => {
-	const baseTransaction = {
+	const mantleTransaction = {
 		from: "0x977f82a600a1414e583f7f13623f1ac5d58b1c0b",
 		sourceHash:
 			"0x18040f35752170c3339ddcd850f185c9cc46bdef4d6e1f2ab323f4d3d7104319",
@@ -22,13 +22,13 @@ describe("deposit", async () => {
 	} as const satisfies TransactionSerializableDeposit;
 
 	test("default", () => {
-		const serialized = serializeTransaction(baseTransaction);
-		expect(parseTransaction(serialized)).toEqual(baseTransaction);
+		const serialized = serializeTransaction(mantleTransaction);
+		expect(parseTransaction(serialized)).toEqual(mantleTransaction);
 	});
 
 	test("args: data", () => {
 		const tx = {
-			...baseTransaction,
+			...mantleTransaction,
 			data: "0xdeadbeef",
 		} as const satisfies TransactionSerializableDeposit;
 		const serialized = serializeTransaction(tx);
@@ -37,7 +37,7 @@ describe("deposit", async () => {
 
 	test("args: gas", () => {
 		const tx = {
-			...baseTransaction,
+			...mantleTransaction,
 			gas: 69420n,
 		} as const satisfies TransactionSerializableDeposit;
 		const serialized = serializeTransaction(tx);
@@ -46,7 +46,7 @@ describe("deposit", async () => {
 
 	test("args: isSystemTx", () => {
 		const tx = {
-			...baseTransaction,
+			...mantleTransaction,
 			isSystemTx: true,
 		} as const satisfies TransactionSerializableDeposit;
 		const serialized = serializeTransaction(tx);
@@ -55,7 +55,7 @@ describe("deposit", async () => {
 
 	test("args: mint", () => {
 		const tx = {
-			...baseTransaction,
+			...mantleTransaction,
 			mint: 69420n,
 		} as const satisfies TransactionSerializableDeposit;
 		const serialized = serializeTransaction(tx);
@@ -64,7 +64,7 @@ describe("deposit", async () => {
 
 	test("args: to", () => {
 		const tx = {
-			...baseTransaction,
+			...mantleTransaction,
 			to: "0xaabbccddeeff00112233445566778899aabbccdd",
 		} as const satisfies TransactionSerializableDeposit;
 		const serialized = serializeTransaction(tx);
@@ -73,7 +73,7 @@ describe("deposit", async () => {
 
 	test("args: value", () => {
 		const tx = {
-			...baseTransaction,
+			...mantleTransaction,
 			value: 69420n,
 		} as const satisfies TransactionSerializableDeposit;
 		const serialized = serializeTransaction(tx);
@@ -82,7 +82,7 @@ describe("deposit", async () => {
 
 	test("args: no type", () => {
 		const serialized = serializeTransaction({
-			...baseTransaction,
+			...mantleTransaction,
 			type: undefined,
 		} as any);
 		expect(serialized).toMatchInlineSnapshot(
@@ -92,7 +92,7 @@ describe("deposit", async () => {
 
 	test("error: invalid to", () => {
 		const tx = {
-			...baseTransaction,
+			...mantleTransaction,
 			to: "0xaabbccddeeff00112233445566778899aabbccd",
 		} as const satisfies TransactionSerializableDeposit;
 		expect(() => serializeTransaction(tx)).toThrowErrorMatchingInlineSnapshot(
@@ -109,7 +109,7 @@ describe("deposit", async () => {
 
 	test("error: invalid from", () => {
 		const tx = {
-			...baseTransaction,
+			...mantleTransaction,
 			from: "0xaabbccddeeff00112233445566778899aabbccd",
 		} as const satisfies TransactionSerializableDeposit;
 		expect(() => serializeTransaction(tx)).toThrowErrorMatchingInlineSnapshot(

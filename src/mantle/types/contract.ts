@@ -1,7 +1,7 @@
-import type { Address } from "abitype";
+import type { Address } from "viem";
 
-import type { Chain } from "../../types/chain.js";
-import type { Prettify } from "../../types/utils.js";
+import type { Chain } from "viem";
+import type { Prettify } from "viem";
 import type { TargetChain } from "./chain.js";
 
 export type GetContractAddressParameter<

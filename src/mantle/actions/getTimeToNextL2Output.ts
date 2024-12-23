@@ -1,21 +1,13 @@
+import type { Account, Client, Transport } from "viem";
+import type { Chain, DeriveChain, GetChainParameter } from "viem";
 import {
 	multicall,
 	type MulticallErrorType,
-} from "../../actions/public/multicall.js";
-import {
 	readContract,
 	type ReadContractErrorType,
-} from "../../actions/public/readContract.js";
-import type { Client } from "../../clients/createClient.js";
-import type { Transport } from "../../clients/transports/createTransport.js";
-import type { ErrorType } from "../../errors/utils.js";
-import type { Account } from "../../types/account.js";
-import type {
-	Chain,
-	DeriveChain,
-	GetChainParameter,
-} from "../../types/chain.js";
+} from "viem/actions";
 import { l2OutputOracleAbi } from "../abis.js";
+import type { ErrorType } from "../errors/utils.js";
 import type { GetContractAddressParameter } from "../types/contract.js";
 
 export type GetTimeToNextL2OutputParameters<
@@ -51,32 +43,9 @@ export type GetTimeToNextL2OutputErrorType =
 	| ErrorType;
 
 /**
- * Returns the time until the next L2 output (after the provided block number) is submitted. Used for the [Withdrawal](/op-stack/guides/withdrawals) flow.
- *
- * - Docs: https://viem.sh/op-stack/actions/getTimeToNextL2Output
- *
  * @param client - Client to use
  * @param parameters - {@link GetTimeToNextL2OutputParameters}
  * @returns The L2 transaction hash. {@link GetTimeToNextL2OutputReturnType}
- *
- * @example
- * import { createPublicClient, http } from 'viem'
- * import { getBlockNumber } from 'viem/actions'
- * import { mainnet, optimism } from 'viem/chains'
- * import { getTimeToNextL2Output } from 'viem/op-stack'
- *
- * const publicClientL1 = createPublicClient({
- *   chain: mainnet,
- *   transport: http(),
- * })
- * const publicClientL2 = createPublicClient({
- *   chain: optimism,
- *   transport: http(),
- * })
- *
- * const { seconds } = await getTimeToNextL2Output(publicClientL1, {
- *   targetChain: optimism
- * })
  */
 export async function getTimeToNextL2Output<
 	chain extends Chain | undefined,

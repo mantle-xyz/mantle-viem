@@ -1,12 +1,12 @@
+import { parseEther, parseGwei } from "viem";
 import { describe, expect, test } from "vitest";
 import { accounts } from "../../test/src/constants.js";
-import { parseEther, parseGwei } from "../index.js";
 import { parseTransaction } from "./parsers.js";
 import { serializeTransaction } from "./serializers.js";
 import type { TransactionSerializableDeposit } from "./types/transaction.js";
 
 describe("deposit", () => {
-	const baseTransaction = {
+	const mantleTransaction = {
 		from: "0x977f82a600a1414e583f7f13623f1ac5d58b1c0b",
 		sourceHash:
 			"0x18040f35752170c3339ddcd850f185c9cc46bdef4d6e1f2ab323f4d3d7104319",
@@ -14,14 +14,14 @@ describe("deposit", () => {
 	} as const satisfies TransactionSerializableDeposit;
 
 	test("default", () => {
-		const serialized = serializeTransaction(baseTransaction);
+		const serialized = serializeTransaction(mantleTransaction);
 		const transaction = parseTransaction(serialized);
-		expect(transaction).toEqual(baseTransaction);
+		expect(transaction).toEqual(mantleTransaction);
 	});
 
 	test("args: data", () => {
 		const tx = {
-			...baseTransaction,
+			...mantleTransaction,
 			data: "0xdeadbeef",
 		} as const satisfies TransactionSerializableDeposit;
 		const serialized = serializeTransaction(tx);
@@ -31,7 +31,7 @@ describe("deposit", () => {
 
 	test("args: gas", () => {
 		const tx = {
-			...baseTransaction,
+			...mantleTransaction,
 			gas: 69420n,
 		} as const satisfies TransactionSerializableDeposit;
 		const serialized = serializeTransaction(tx);
@@ -41,7 +41,7 @@ describe("deposit", () => {
 
 	test("args: isSystemTx", () => {
 		const tx = {
-			...baseTransaction,
+			...mantleTransaction,
 			isSystemTx: true,
 		} as const satisfies TransactionSerializableDeposit;
 		const serialized = serializeTransaction(tx);
@@ -51,7 +51,7 @@ describe("deposit", () => {
 
 	test("args: mint", () => {
 		const tx = {
-			...baseTransaction,
+			...mantleTransaction,
 			mint: 69420n,
 		} as const satisfies TransactionSerializableDeposit;
 		const serialized = serializeTransaction(tx);
@@ -61,7 +61,7 @@ describe("deposit", () => {
 
 	test("args: to", () => {
 		const tx = {
-			...baseTransaction,
+			...mantleTransaction,
 			to: "0xaabbccddeeff00112233445566778899aabbccdd",
 		} as const satisfies TransactionSerializableDeposit;
 		const serialized = serializeTransaction(tx);
@@ -71,7 +71,7 @@ describe("deposit", () => {
 
 	test("args: value", () => {
 		const tx = {
-			...baseTransaction,
+			...mantleTransaction,
 			value: 69420n,
 		} as const satisfies TransactionSerializableDeposit;
 		const serialized = serializeTransaction(tx);

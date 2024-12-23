@@ -1,12 +1,9 @@
 import { describe, expectTypeOf, test } from "vitest";
 
-import { getBlock } from "../actions/public/getBlock.js";
-import { getTransaction } from "../actions/public/getTransaction.js";
-import { getTransactionReceipt } from "../actions/public/getTransactionReceipt.js";
-import { optimism } from "../chains/index.js";
-import { createPublicClient } from "../clients/createPublicClient.js";
-import { http } from "../clients/transports/http.js";
-import type { Hash } from "../types/misc.js";
+import { createPublicClient, http } from "viem";
+import type { Hash } from "viem";
+import { getBlock, getTransaction, getTransactionReceipt } from "viem/actions";
+import { mantle } from "./chains/index.js";
 import { formatters } from "./formatters.js";
 import type { OpStackRpcBlock } from "./types/block.js";
 
@@ -31,7 +28,7 @@ describe("transaction", () => {
 describe("smoke", () => {
 	test("block", async () => {
 		const client = createPublicClient({
-			chain: optimism,
+			chain: mantle,
 			transport: http(),
 		});
 
@@ -59,7 +56,7 @@ describe("smoke", () => {
 
 	test("transaction", async () => {
 		const client = createPublicClient({
-			chain: optimism,
+			chain: mantle,
 			transport: http(),
 		});
 
@@ -93,7 +90,7 @@ describe("smoke", () => {
 
 	test("transaction receipt", async () => {
 		const client = createPublicClient({
-			chain: optimism,
+			chain: mantle,
 			transport: http(),
 		});
 

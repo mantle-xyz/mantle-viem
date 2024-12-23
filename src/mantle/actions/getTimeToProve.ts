@@ -1,26 +1,9 @@
-import type { Client } from "../../clients/createClient.js";
-import type { Transport } from "../../clients/transports/createTransport.js";
-import type { ErrorType } from "../../errors/utils.js";
-import type { Account } from "../../types/account.js";
-import type {
-	Chain,
-	DeriveChain,
-	GetChainParameter,
-} from "../../types/chain.js";
-import type { TransactionReceipt } from "../../types/transaction.js";
-import type { OneOf } from "../../types/utils.js";
+import type { Account, Client, Transport } from "viem";
+import type { Chain, DeriveChain, GetChainParameter } from "viem";
+import type { TransactionReceipt } from "viem";
+import type { OneOf } from "viem";
+import type { ErrorType } from "../errors/utils.js";
 import type { GetContractAddressParameter } from "../types/contract.js";
-import {
-	getPortalVersion,
-	type GetPortalVersionErrorType,
-	type GetPortalVersionParameters,
-} from "./getPortalVersion.js";
-import {
-	getTimeToNextGame,
-	type GetTimeToNextGameErrorType,
-	type GetTimeToNextGameParameters,
-	type GetTimeToNextGameReturnType,
-} from "./getTimeToNextGame.js";
 import {
 	getTimeToNextL2Output,
 	type GetTimeToNextL2OutputErrorType,
@@ -35,10 +18,7 @@ export type GetTimeToProveParameters<
 > = GetChainParameter<chain, chainOverride> &
 	OneOf<
 		| GetContractAddressParameter<_derivedChain, "l2OutputOracle">
-		| GetContractAddressParameter<
-				_derivedChain,
-				"disputeGameFactory" | "portal"
-		  >
+		| GetContractAddressParameter<_derivedChain, "portal">
 	> & {
 		/**
 		 * The buffer to account for discrepancies between non-deterministic time intervals.
@@ -50,45 +30,16 @@ export type GetTimeToProveParameters<
 		receipt: TransactionReceipt;
 	};
 
-export type GetTimeToProveReturnType =
-	| GetTimeToNextGameReturnType
-	| GetTimeToNextL2OutputReturnType;
+export type GetTimeToProveReturnType = GetTimeToNextL2OutputReturnType;
 
 export type GetTimeToProveErrorType =
-	| GetPortalVersionErrorType
-	| GetTimeToNextGameErrorType
 	| GetTimeToNextL2OutputErrorType
 	| ErrorType;
 
 /**
- * Returns the time until the withdrawal transaction is ready to prove. Used for the [Withdrawal](/op-stack/guides/withdrawals) flow.
- *
- * - Docs: https://viem.sh/op-stack/actions/getTimeToProve
- *
  * @param client - Client to use
  * @param parameters - {@link GetTimeToNextL2OutputParameters}
  * @returns Time until prove step is ready. {@link GetTimeToNextL2OutputReturnType}
- *
- * @example
- * import { createPublicClient, http } from 'viem'
- * import { getBlockNumber } from 'viem/actions'
- * import { mainnet, optimism } from 'viem/chains'
- * import { getTimeToProve } from 'viem/op-stack'
- *
- * const publicClientL1 = createPublicClient({
- *   chain: mainnet,
- *   transport: http(),
- * })
- * const publicClientL2 = createPublicClient({
- *   chain: optimism,
- *   transport: http(),
- * })
- *
- * const receipt = await publicClientL2.getTransactionReceipt({ hash: '0x...' })
- * const { period, seconds, timestamp } = await getTimeToProve(publicClientL1, {
- *   receipt,
- *   targetChain: optimism
- * })
  */
 export async function getTimeToProve<
 	chain extends Chain | undefined,
@@ -100,21 +51,8 @@ export async function getTimeToProve<
 ): Promise<GetTimeToProveReturnType> {
 	const { receipt } = parameters;
 
-	const portalVersion = await getPortalVersion(
-		client,
-		parameters as GetPortalVersionParameters,
-	);
-
-	// Legacy
-	if (portalVersion.major < 3) {
-		return getTimeToNextL2Output(client, {
-			...parameters,
-			l2BlockNumber: receipt.blockNumber,
-		} as GetTimeToNextL2OutputParameters);
-	}
-
-	return getTimeToNextGame(client, {
+	return getTimeToNextL2Output(client, {
 		...parameters,
 		l2BlockNumber: receipt.blockNumber,
-	} as GetTimeToNextGameParameters);
+	} as GetTimeToNextL2OutputParameters);
 }

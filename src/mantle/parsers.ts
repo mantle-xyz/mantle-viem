@@ -1,15 +1,17 @@
-import { InvalidSerializedTransactionError } from "../errors/transaction.js";
-import type { ErrorType } from "../errors/utils.js";
-import { isHex } from "../utils/data/isHex.js";
-import { sliceHex } from "../utils/data/slice.js";
-import { hexToBigInt, hexToBool } from "../utils/encoding/fromHex.js";
-import type { GetSerializedTransactionType } from "../utils/transaction/getSerializedTransactionType.js";
 import {
+	fromRlp,
+	type GetSerializedTransactionType,
+	type Hex,
+	hexToBigInt,
+	hexToBool,
+	isHex,
 	parseTransaction as parseTransaction_,
 	type ParseTransactionErrorType as ParseTransactionErrorType_,
 	type ParseTransactionReturnType as ParseTransactionReturnType_,
-	toTransactionArray,
-} from "../utils/transaction/parseTransaction.js";
+	sliceHex,
+} from "viem";
+import { InvalidSerializedTransactionError } from "viem";
+import type { ErrorType } from "./errors/utils.js";
 import { assertTransactionDeposit } from "./serializers.js";
 import type {
 	OpStackTransactionSerialized,
@@ -17,6 +19,10 @@ import type {
 	TransactionSerializableDeposit,
 	TransactionSerializedDeposit,
 } from "./types/transaction.js";
+
+export function toTransactionArray(serializedTransaction: string) {
+	return fromRlp(`0x${serializedTransaction.slice(4)}` as Hex, "hex");
+}
 
 export type ParseTransactionReturnType<
 	serialized extends

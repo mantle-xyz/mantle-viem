@@ -1,100 +1,17 @@
 // biome-ignore lint/performance/noBarrelFile: entrypoint module
 export {
-	buildDepositTransaction,
-	type BuildDepositTransactionErrorType,
-	type BuildDepositTransactionParameters,
-	type BuildDepositTransactionReturnType,
-} from "./actions/buildDepositTransaction.js";
-export {
-	buildInitiateWithdrawal,
-	type BuildInitiateWithdrawalErrorType,
-	type BuildInitiateWithdrawalParameters,
-	type BuildInitiateWithdrawalReturnType,
-} from "./actions/buildInitiateWithdrawal.js";
-export {
 	buildProveWithdrawal,
 	type BuildProveWithdrawalErrorType,
 	type BuildProveWithdrawalParameters,
 	type BuildProveWithdrawalReturnType,
 } from "./actions/buildProveWithdrawal.js";
-export {
-	depositTransaction,
-	type DepositTransactionErrorType,
-	type DepositTransactionParameters,
-	type DepositTransactionReturnType,
-} from "./actions/depositTransaction.js";
-export {
-	estimateContractL1Fee,
-	type EstimateContractL1FeeErrorType,
-	type EstimateContractL1FeeParameters,
-	type EstimateContractL1FeeReturnType,
-} from "./actions/estimateContractL1Fee.js";
-export {
-	estimateContractL1Gas,
-	type EstimateContractL1GasErrorType,
-	type EstimateContractL1GasParameters,
-	type EstimateContractL1GasReturnType,
-} from "./actions/estimateContractL1Gas.js";
-export {
-	estimateContractTotalFee,
-	type EstimateContractTotalFeeErrorType,
-	type EstimateContractTotalFeeParameters,
-	type EstimateContractTotalFeeReturnType,
-} from "./actions/estimateContractTotalFee.js";
-export {
-	estimateContractTotalGas,
-	type EstimateContractTotalGasErrorType,
-	type EstimateContractTotalGasParameters,
-	type EstimateContractTotalGasReturnType,
-} from "./actions/estimateContractTotalGas.js";
-export {
-	estimateL1Fee,
-	type EstimateL1FeeErrorType,
-	type EstimateL1FeeParameters,
-	type EstimateL1FeeReturnType,
-} from "./actions/estimateL1Fee.js";
-export {
-	estimateL1Gas,
-	type EstimateL1GasErrorType,
-	type EstimateL1GasParameters,
-	type EstimateL1GasReturnType,
-} from "./actions/estimateL1Gas.js";
-export {
-	estimateTotalFee,
-	type EstimateTotalFeeErrorType,
-	type EstimateTotalFeeParameters,
-	type EstimateTotalFeeReturnType,
-} from "./actions/estimateTotalFee.js";
-export {
-	estimateTotalGas,
-	type EstimateTotalGasErrorType,
-	type EstimateTotalGasParameters,
-	type EstimateTotalGasReturnType,
-} from "./actions/estimateTotalGas.js";
+
 export {
 	finalizeWithdrawal,
 	type FinalizeWithdrawalErrorType,
 	type FinalizeWithdrawalParameters,
 	type FinalizeWithdrawalReturnType,
 } from "./actions/finalizeWithdrawal.js";
-export {
-	getGame,
-	type GetGameErrorType,
-	type GetGameParameters,
-	type GetGameReturnType,
-} from "./actions/getGame.js";
-export {
-	getGames,
-	type GetGamesErrorType,
-	type GetGamesParameters,
-	type GetGamesReturnType,
-} from "./actions/getGames.js";
-export {
-	getL1BaseFee,
-	type GetL1BaseFeeErrorType,
-	type GetL1BaseFeeParameters,
-	type GetL1BaseFeeReturnType,
-} from "./actions/getL1BaseFee.js";
 export {
 	getL2Output,
 	type GetL2OutputErrorType,
@@ -114,12 +31,6 @@ export {
 	type GetTimeToFinalizeReturnType,
 } from "./actions/getTimeToFinalize.js";
 export {
-	getTimeToNextGame,
-	type GetTimeToNextGameErrorType,
-	type GetTimeToNextGameParameters,
-	type GetTimeToNextGameReturnType,
-} from "./actions/getTimeToNextGame.js";
-export {
 	getTimeToNextL2Output,
 	type GetTimeToNextL2OutputErrorType,
 	type GetTimeToNextL2OutputParameters,
@@ -138,23 +49,11 @@ export {
 	type GetWithdrawalStatusReturnType,
 } from "./actions/getWithdrawalStatus.js";
 export {
-	initiateWithdrawal,
-	type InitiateWithdrawalErrorType,
-	type InitiateWithdrawalParameters,
-	type InitiateWithdrawalReturnType,
-} from "./actions/initiateWithdrawal.js";
-export {
 	proveWithdrawal,
 	type ProveWithdrawalErrorType,
 	type ProveWithdrawalParameters,
 	type ProveWithdrawalReturnType,
 } from "./actions/proveWithdrawal.js";
-export {
-	waitForNextGame,
-	type WaitForNextGameErrorType,
-	type WaitForNextGameParameters,
-	type WaitForNextGameReturnType,
-} from "./actions/waitForNextGame.js";
 export {
 	waitForNextL2Output,
 	type WaitForNextL2OutputErrorType,
@@ -175,9 +74,6 @@ export {
 } from "./actions/waitToProve.js";
 
 export { chainConfig } from "./chainConfig.js";
-
-// biome-ignore lint/performance/noReExportAll: intentionally re-exporting
-export * from "./chains.js";
 
 export {
 	type PublicActionsL1,

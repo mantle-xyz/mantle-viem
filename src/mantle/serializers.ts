@@ -1,17 +1,17 @@
-import { InvalidAddressError } from "../errors/address.js";
-import type { ErrorType } from "../errors/utils.js";
-import type { ChainSerializers } from "../types/chain.js";
-import type { Hex, Signature } from "../types/misc.js";
-import type { TransactionSerializable } from "../types/transaction.js";
-import type { RequiredBy } from "../types/utils.js";
-import { isAddress } from "../utils/address/isAddress.js";
-import { concatHex } from "../utils/data/concat.js";
-import { toHex } from "../utils/encoding/toHex.js";
-import { toRlp } from "../utils/encoding/toRlp.js";
 import {
+	concatHex,
+	isAddress,
 	serializeTransaction as serializeTransaction_,
 	type SerializeTransactionErrorType as SerializeTransactionErrorType_,
-} from "../utils/transaction/serializeTransaction.js";
+	toHex,
+	toRlp,
+} from "viem";
+import { InvalidAddressError } from "viem";
+import type { ChainSerializers } from "viem";
+import type { Hex, Signature } from "viem";
+import type { TransactionSerializable } from "viem";
+import type { RequiredBy } from "viem";
+import type { ErrorType } from "./errors/utils.js";
 import type {
 	OpStackTransactionSerializable,
 	TransactionSerializableDeposit,
@@ -52,8 +52,18 @@ function serializeTransactionDeposit(
 ): SerializeTransactionDepositReturnType {
 	assertTransactionDeposit(transaction);
 
-	const { sourceHash, data, from, gas, isSystemTx, mint, to, value } =
-		transaction;
+	const {
+		sourceHash,
+		data,
+		from,
+		gas,
+		isSystemTx,
+		mint,
+		to,
+		value,
+		ethValue,
+		ethTxValue,
+	} = transaction;
 
 	const serializedTransaction: Hex[] = [
 		sourceHash,
@@ -63,8 +73,13 @@ function serializeTransactionDeposit(
 		value ? toHex(value) : "0x",
 		gas ? toHex(gas) : "0x",
 		isSystemTx ? "0x1" : "0x",
+		ethValue ? toHex(ethValue) : "0x",
 		data ?? "0x",
 	];
+
+	if (ethTxValue) {
+		serializedTransaction.push(toHex(ethTxValue));
+	}
 
 	return concatHex([
 		"0x7e",

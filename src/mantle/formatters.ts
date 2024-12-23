@@ -1,12 +1,12 @@
-import type { ChainFormatters } from "../types/chain.js";
-import type { RpcTransaction } from "../types/rpc.js";
-import { hexToBigInt } from "../utils/encoding/fromHex.js";
-import { defineBlock } from "../utils/formatters/block.js";
 import {
+	defineBlock,
 	defineTransaction,
+	defineTransactionReceipt,
 	formatTransaction,
-} from "../utils/formatters/transaction.js";
-import { defineTransactionReceipt } from "../utils/formatters/transactionReceipt.js";
+	hexToBigInt,
+} from "viem";
+import type { ChainFormatters } from "viem";
+import type { RpcTransaction } from "viem";
 import type { OpStackBlock, OpStackRpcBlock } from "./types/block.js";
 import type {
 	OpStackRpcTransaction,

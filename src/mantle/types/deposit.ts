@@ -1,28 +1,40 @@
-import type { Address } from "abitype";
-import type { Hex } from "../../types/misc.js";
+import type { Address } from "viem";
 
 export type DepositRequest = {
-	/** Gas limit for transaction execution on the L2. */
-	gas: bigint;
-	/** Value in wei to mint (deposit) on the L2. Debited from the caller's L1 balance. */
-	mint?: bigint | undefined;
-	/** Value in wei sent with this transaction on the L2. Debited from the caller's L2 balance. */
-	value?: bigint | undefined;
+	/** L2 Transaction recipient. */
+	// to: Address;
+	amount: bigint;
+	to?: Address;
 } & (
 	| {
-			/** Encoded contract method & arguments. */
-			data?: Hex | undefined;
-			/** Whether or not this is a contract deployment transaction. */
-			isCreation?: false | undefined;
-			/** L2 Transaction recipient. */
-			to?: Address | undefined;
+			type: "mnt" | "eth";
+			/** Other ERC20 L1 Token Address. */
+			l1Token?: undefined;
+			/** Other ERC20 L2 Token Address. */
+			l2Token?: undefined;
 	  }
 	| {
-			/** Contract deployment bytecode. Required for contract deployment transactions. */
-			data: Hex;
-			/** Whether or not this is a contract deployment transaction. */
-			isCreation: true;
-			/** L2 Transaction recipient. Cannot exist for contract deployment transactions. */
-			to?: undefined;
+			type: "erc20";
+			/** Other ERC20 L1 Token Address. */
+			l1Token: Address;
+			/** Other ERC20 L2 Token Address. */
+			l2Token: Address;
 	  }
 );
+
+export type DepositERC20Request = {
+	amount: bigint;
+	/** Other ERC20 L1 Token Address. */
+	l1Token: Address;
+	/** Other ERC20 L2 Token Address. */
+	l2Token: Address;
+	to?: Address;
+};
+export type DepositMNTRequest = {
+	amount: bigint;
+	to?: Address;
+};
+export type DepositETHRequest = {
+	amount: bigint;
+	to?: Address;
+};

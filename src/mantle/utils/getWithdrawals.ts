@@ -1,5 +1,5 @@
-import type { ErrorType } from "../../errors/utils.js";
-import type { Log } from "../../types/log.js";
+import type { Log } from "viem";
+import type { ErrorType } from "../errors/utils.js";
 import type { Withdrawal } from "../types/withdrawal.js";
 import {
 	extractWithdrawalMessageLogs,

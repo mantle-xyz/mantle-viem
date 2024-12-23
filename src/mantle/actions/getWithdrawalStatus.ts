@@ -1,19 +1,17 @@
-import {
-	readContract,
-	type ReadContractErrorType,
-} from "../../actions/public/readContract.js";
-import type { Client } from "../../clients/createClient.js";
-import type { Transport } from "../../clients/transports/createTransport.js";
-import { ContractFunctionRevertedError } from "../../errors/contract.js";
-import type { ErrorType } from "../../errors/utils.js";
-import type { Account } from "../../types/account.js";
 import type {
+	Account,
 	Chain,
+	Client,
 	DeriveChain,
 	GetChainParameter,
-} from "../../types/chain.js";
-import type { TransactionReceipt } from "../../types/transaction.js";
-import type { OneOf } from "../../types/utils.js";
+	Transport,
+} from "viem";
+import { ContractFunctionRevertedError } from "viem";
+import { readContract, type ReadContractErrorType } from "viem/actions";
+import type { ErrorType } from "../errors/utils.js";
+
+import type { TransactionReceipt } from "viem";
+import type { OneOf } from "viem";
 import { portal2Abi, portalAbi } from "../abis.js";
 import {
 	ReceiptContainsNoWithdrawalsError,
@@ -25,11 +23,6 @@ import {
 	getWithdrawals,
 	type GetWithdrawalsErrorType,
 } from "../utils/getWithdrawals.js";
-import {
-	getGame,
-	type GetGameErrorType,
-	type GetGameParameters,
-} from "./getGame.js";
 import {
 	getL2Output,
 	type GetL2OutputErrorType,
@@ -51,22 +44,8 @@ export type GetWithdrawalStatusParameters<
 	_derivedChain extends Chain | undefined = DeriveChain<chain, chainOverride>,
 > = GetChainParameter<chain, chainOverride> &
 	OneOf<
-		| GetContractAddressParameter<_derivedChain, "l2OutputOracle" | "portal">
-		| GetContractAddressParameter<
-				_derivedChain,
-				"disputeGameFactory" | "portal"
-		  >
+		GetContractAddressParameter<_derivedChain, "l2OutputOracle" | "portal">
 	> & {
-		/**
-		 * Limit of games to extract to check withdrawal status.
-		 * @default 100
-		 */
-		gameLimit?: number;
-		/**
-		 * The relative index of the withdrawal in the transaction receipt logs.
-		 * @default 0
-		 */
-		logIndex?: number;
 		receipt: TransactionReceipt;
 	};
 export type GetWithdrawalStatusReturnType =
@@ -85,34 +64,9 @@ export type GetWithdrawalStatusErrorType =
 	| ErrorType;
 
 /**
- * Returns the current status of a withdrawal. Used for the [Withdrawal](/op-stack/guides/withdrawals) flow.
- *
- * - Docs: https://viem.sh/op-stack/actions/getWithdrawalStatus
- *
  * @param client - Client to use
  * @param parameters - {@link GetWithdrawalStatusParameters}
  * @returns Status of the withdrawal. {@link GetWithdrawalStatusReturnType}
- *
- * @example
- * import { createPublicClient, http } from 'viem'
- * import { getBlockNumber } from 'viem/actions'
- * import { mainnet, optimism } from 'viem/chains'
- * import { getWithdrawalStatus } from 'viem/op-stack'
- *
- * const publicClientL1 = createPublicClient({
- *   chain: mainnet,
- *   transport: http(),
- * })
- * const publicClientL2 = createPublicClient({
- *   chain: optimism,
- *   transport: http(),
- * })
- *
- * const receipt = await publicClientL2.getTransactionReceipt({ hash: '0x...' })
- * const status = await getWithdrawalStatus(publicClientL1, {
- *   receipt,
- *   targetChain: optimism
- * })
  */
 export async function getWithdrawalStatus<
 	chain extends Chain | undefined,
@@ -124,10 +78,8 @@ export async function getWithdrawalStatus<
 ): Promise<GetWithdrawalStatusReturnType> {
 	const {
 		chain = client.chain,
-		gameLimit = 100,
 		receipt,
 		targetChain: targetChain_,
-		logIndex = 0,
 	} = parameters;
 
 	const targetChain = targetChain_ as unknown as TargetChain;
@@ -138,7 +90,7 @@ export async function getWithdrawalStatus<
 		return Object.values(targetChain.contracts.portal)[0].address;
 	})();
 
-	const withdrawal = getWithdrawals(receipt)[logIndex];
+	const [withdrawal] = getWithdrawals(receipt);
 
 	if (!withdrawal) {
 		throw new ReceiptContainsNoWithdrawalsError({
@@ -220,36 +172,25 @@ export async function getWithdrawalStatus<
 		args: [withdrawal.withdrawalHash, numProofSubmitters - 1n],
 	}).catch(() => withdrawal.sender);
 
-	const [disputeGameResult, checkWithdrawalResult, finalizedResult] =
-		await Promise.allSettled([
-			getGame(client, {
-				...parameters,
-				l2BlockNumber: receipt.blockNumber,
-				limit: gameLimit,
-			} as GetGameParameters),
-			readContract(client, {
-				abi: portal2Abi,
-				address: portalAddress,
-				functionName: "checkWithdrawal",
-				args: [withdrawal.withdrawalHash, proofSubmitter],
-			}),
-			readContract(client, {
-				abi: portal2Abi,
-				address: portalAddress,
-				functionName: "finalizedWithdrawals",
-				args: [withdrawal.withdrawalHash],
-			}),
-		]);
+	const [checkWithdrawalResult, finalizedResult] = await Promise.allSettled([
+		readContract(client, {
+			abi: portal2Abi,
+			address: portalAddress,
+			functionName: "checkWithdrawal",
+			args: [withdrawal.withdrawalHash, proofSubmitter],
+		}),
+		readContract(client, {
+			abi: portal2Abi,
+			address: portalAddress,
+			functionName: "finalizedWithdrawals",
+			args: [withdrawal.withdrawalHash],
+		}),
+	]);
 
 	if (finalizedResult.status === "fulfilled" && finalizedResult.value) {
 		return "finalized";
 	}
 
-	if (disputeGameResult.status === "rejected") {
-		const error = disputeGameResult.reason as GetGameErrorType;
-		if (error.name === "GameNotFoundError") return "waiting-to-prove";
-		throw disputeGameResult.reason;
-	}
 	if (checkWithdrawalResult.status === "rejected") {
 		const error = checkWithdrawalResult.reason as ReadContractErrorType;
 		if (error.cause instanceof ContractFunctionRevertedError) {
@@ -258,9 +199,7 @@ export async function getWithdrawalStatus<
 				errorMessage === "OptimismPortal: invalid game type" ||
 				errorMessage === "OptimismPortal: withdrawal has not been proven yet" ||
 				errorMessage ===
-					"OptimismPortal: withdrawal has not been proven by proof submitter address yet" ||
-				errorMessage ===
-					"OptimismPortal: dispute game created before respected game type was updated"
+					"OptimismPortal: withdrawal has not been proven by proof submitter address yet"
 			) {
 				return "ready-to-prove";
 			}

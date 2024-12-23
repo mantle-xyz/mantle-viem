@@ -1,14 +1,15 @@
-// Adapted from https://github.com/ethereum-optimism/optimism/blob/develop/packages/core-utils/src/optimism/deposit-transaction.ts#L117
-
-import type { ErrorType } from "../../errors/utils.js";
-import type { Hex } from "../../types/misc.js";
-import { concat, type ConcatErrorType } from "../../utils/data/concat.js";
-import { pad, type PadErrorType } from "../../utils/data/pad.js";
-import { toHex, type ToHexErrorType } from "../../utils/encoding/toHex.js";
 import {
+	concat,
+	type ConcatErrorType,
 	keccak256,
 	type Keccak256ErrorType,
-} from "../../utils/hash/keccak256.js";
+	pad,
+	type PadErrorType,
+	toHex,
+	type ToHexErrorType,
+} from "viem";
+import type { Hex } from "viem";
+import type { ErrorType } from "../errors/utils.js";
 
 export type GetSourceHashParameters = {
 	/** The L1 block hash. */
