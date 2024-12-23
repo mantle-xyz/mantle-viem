@@ -1,44 +1,44 @@
 import {
-  type EstimateGasErrorType,
-  type EstimateGasParameters,
-  estimateGas,
-} from '../../actions/public/estimateGas.js'
+	estimateGas,
+	type EstimateGasErrorType,
+	type EstimateGasParameters,
+} from "../../actions/public/estimateGas.js";
 import {
-  type GetGasPriceErrorType,
-  getGasPrice,
-} from '../../actions/public/getGasPrice.js'
+	getGasPrice,
+	type GetGasPriceErrorType,
+} from "../../actions/public/getGasPrice.js";
 import {
-  type PrepareTransactionRequestErrorType,
-  type PrepareTransactionRequestParameters,
-  prepareTransactionRequest,
-} from '../../actions/wallet/prepareTransactionRequest.js'
-import type { Client } from '../../clients/createClient.js'
-import type { Transport } from '../../clients/transports/createTransport.js'
-import type { ErrorType } from '../../errors/utils.js'
-import type { Account } from '../../types/account.js'
-import type { Chain } from '../../types/chain.js'
-import type { RequestErrorType } from '../../utils/buildRequest.js'
+	prepareTransactionRequest,
+	type PrepareTransactionRequestErrorType,
+	type PrepareTransactionRequestParameters,
+} from "../../actions/wallet/prepareTransactionRequest.js";
+import type { Client } from "../../clients/createClient.js";
+import type { Transport } from "../../clients/transports/createTransport.js";
+import type { ErrorType } from "../../errors/utils.js";
+import type { Account } from "../../types/account.js";
+import type { Chain } from "../../types/chain.js";
+import type { RequestErrorType } from "../../utils/buildRequest.js";
 import {
-  type EstimateL1FeeErrorType,
-  type EstimateL1FeeParameters,
-  estimateL1Fee,
-} from './estimateL1Fee.js'
+	estimateL1Fee,
+	type EstimateL1FeeErrorType,
+	type EstimateL1FeeParameters,
+} from "./estimateL1Fee.js";
 
 export type EstimateTotalFeeParameters<
-  chain extends Chain | undefined = Chain | undefined,
-  account extends Account | undefined = Account | undefined,
-  chainOverride extends Chain | undefined = Chain | undefined,
-> = EstimateL1FeeParameters<chain, account, chainOverride>
+	chain extends Chain | undefined = Chain | undefined,
+	account extends Account | undefined = Account | undefined,
+	chainOverride extends Chain | undefined = Chain | undefined,
+> = EstimateL1FeeParameters<chain, account, chainOverride>;
 
-export type EstimateTotalFeeReturnType = bigint
+export type EstimateTotalFeeReturnType = bigint;
 
 export type EstimateTotalFeeErrorType =
-  | RequestErrorType
-  | PrepareTransactionRequestErrorType
-  | EstimateL1FeeErrorType
-  | EstimateGasErrorType
-  | GetGasPriceErrorType
-  | ErrorType
+	| RequestErrorType
+	| PrepareTransactionRequestErrorType
+	| EstimateL1FeeErrorType
+	| EstimateGasErrorType
+	| GetGasPriceErrorType
+	| ErrorType;
 
 /**
  * Estimates the L1 data fee + L2 fee to execute an L2 transaction.
@@ -63,24 +63,24 @@ export type EstimateTotalFeeErrorType =
  * })
  */
 export async function estimateTotalFee<
-  chain extends Chain | undefined,
-  account extends Account | undefined,
-  chainOverride extends Chain | undefined = undefined,
+	chain extends Chain | undefined,
+	account extends Account | undefined,
+	chainOverride extends Chain | undefined = undefined,
 >(
-  client: Client<Transport, chain, account>,
-  args: EstimateTotalFeeParameters<chain, account, chainOverride>,
+	client: Client<Transport, chain, account>,
+	args: EstimateTotalFeeParameters<chain, account, chainOverride>,
 ): Promise<EstimateTotalFeeReturnType> {
-  // Populate transaction with required fields to accurately estimate gas.
-  const request = await prepareTransactionRequest(
-    client,
-    args as PrepareTransactionRequestParameters,
-  )
+	// Populate transaction with required fields to accurately estimate gas.
+	const request = await prepareTransactionRequest(
+		client,
+		args as PrepareTransactionRequestParameters,
+	);
 
-  const [l1Fee, l2Gas, l2GasPrice] = await Promise.all([
-    estimateL1Fee(client, request as EstimateL1FeeParameters),
-    estimateGas(client, request as EstimateGasParameters),
-    getGasPrice(client),
-  ])
+	const [l1Fee, l2Gas, l2GasPrice] = await Promise.all([
+		estimateL1Fee(client, request as EstimateL1FeeParameters),
+		estimateGas(client, request as EstimateGasParameters),
+		getGasPrice(client),
+	]);
 
-  return l1Fee + l2Gas * l2GasPrice
+	return l1Fee + l2Gas * l2GasPrice;
 }

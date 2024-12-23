@@ -1,59 +1,59 @@
-import type { Address } from 'abitype'
+import type { Address } from "abitype";
 
 import {
-  type ReadContractErrorType,
-  readContract,
-} from '../../actions/public/readContract.js'
+	readContract,
+	type ReadContractErrorType,
+} from "../../actions/public/readContract.js";
 import {
-  type PrepareTransactionRequestErrorType,
-  type PrepareTransactionRequestParameters,
-  prepareTransactionRequest,
-} from '../../actions/wallet/prepareTransactionRequest.js'
-import type { Client } from '../../clients/createClient.js'
-import type { Transport } from '../../clients/transports/createTransport.js'
-import type { ErrorType } from '../../errors/utils.js'
-import type { Account, GetAccountParameter } from '../../types/account.js'
-import type { Chain, GetChainParameter } from '../../types/chain.js'
+	prepareTransactionRequest,
+	type PrepareTransactionRequestErrorType,
+	type PrepareTransactionRequestParameters,
+} from "../../actions/wallet/prepareTransactionRequest.js";
+import type { Client } from "../../clients/createClient.js";
+import type { Transport } from "../../clients/transports/createTransport.js";
+import type { ErrorType } from "../../errors/utils.js";
+import type { Account, GetAccountParameter } from "../../types/account.js";
+import type { Chain, GetChainParameter } from "../../types/chain.js";
 import type {
-  TransactionRequestEIP1559,
-  TransactionSerializable,
-} from '../../types/transaction.js'
-import type { RequestErrorType } from '../../utils/buildRequest.js'
-import { getChainContractAddress } from '../../utils/chain/getChainContractAddress.js'
-import type { HexToNumberErrorType } from '../../utils/encoding/fromHex.js'
+	TransactionRequestEIP1559,
+	TransactionSerializable,
+} from "../../types/transaction.js";
+import type { RequestErrorType } from "../../utils/buildRequest.js";
+import { getChainContractAddress } from "../../utils/chain/getChainContractAddress.js";
+import type { HexToNumberErrorType } from "../../utils/encoding/fromHex.js";
 import {
-  type AssertRequestErrorType,
-  type AssertRequestParameters,
-  assertRequest,
-} from '../../utils/transaction/assertRequest.js'
+	assertRequest,
+	type AssertRequestErrorType,
+	type AssertRequestParameters,
+} from "../../utils/transaction/assertRequest.js";
 import {
-  type SerializeTransactionErrorType,
-  serializeTransaction,
-} from '../../utils/transaction/serializeTransaction.js'
-import { gasPriceOracleAbi } from '../abis.js'
-import { contracts } from '../contracts.js'
+	serializeTransaction,
+	type SerializeTransactionErrorType,
+} from "../../utils/transaction/serializeTransaction.js";
+import { gasPriceOracleAbi } from "../abis.js";
+import { contracts } from "../contracts.js";
 
 export type EstimateL1FeeParameters<
-  TChain extends Chain | undefined = Chain | undefined,
-  TAccount extends Account | undefined = Account | undefined,
-  TChainOverride extends Chain | undefined = undefined,
-> = Omit<TransactionRequestEIP1559, 'from'> &
-  GetAccountParameter<TAccount> &
-  GetChainParameter<TChain, TChainOverride> & {
-    /** Gas price oracle address. */
-    gasPriceOracleAddress?: Address | undefined
-  }
+	TChain extends Chain | undefined = Chain | undefined,
+	TAccount extends Account | undefined = Account | undefined,
+	TChainOverride extends Chain | undefined = undefined,
+> = Omit<TransactionRequestEIP1559, "from"> &
+	GetAccountParameter<TAccount> &
+	GetChainParameter<TChain, TChainOverride> & {
+		/** Gas price oracle address. */
+		gasPriceOracleAddress?: Address | undefined;
+	};
 
-export type EstimateL1FeeReturnType = bigint
+export type EstimateL1FeeReturnType = bigint;
 
 export type EstimateL1FeeErrorType =
-  | RequestErrorType
-  | PrepareTransactionRequestErrorType
-  | AssertRequestErrorType
-  | SerializeTransactionErrorType
-  | HexToNumberErrorType
-  | ReadContractErrorType
-  | ErrorType
+	| RequestErrorType
+	| PrepareTransactionRequestErrorType
+	| AssertRequestErrorType
+	| SerializeTransactionErrorType
+	| HexToNumberErrorType
+	| ReadContractErrorType
+	| ErrorType;
 
 /**
  * Estimates the L1 data fee required to execute an L2 transaction.
@@ -78,45 +78,46 @@ export type EstimateL1FeeErrorType =
  * })
  */
 export async function estimateL1Fee<
-  TChain extends Chain | undefined,
-  TAccount extends Account | undefined,
-  TChainOverride extends Chain | undefined = undefined,
+	TChain extends Chain | undefined,
+	TAccount extends Account | undefined,
+	TChainOverride extends Chain | undefined = undefined,
 >(
-  client: Client<Transport, TChain, TAccount>,
-  args: EstimateL1FeeParameters<TChain, TAccount, TChainOverride>,
+	client: Client<Transport, TChain, TAccount>,
+	args: EstimateL1FeeParameters<TChain, TAccount, TChainOverride>,
 ): Promise<EstimateL1FeeReturnType> {
-  const {
-    chain = client.chain,
-    gasPriceOracleAddress: gasPriceOracleAddress_,
-  } = args
+	const {
+		chain = client.chain,
+		gasPriceOracleAddress: gasPriceOracleAddress_,
+	} = args;
 
-  const gasPriceOracleAddress = (() => {
-    if (gasPriceOracleAddress_) return gasPriceOracleAddress_
-    if (chain)
-      return getChainContractAddress({
-        chain,
-        contract: 'gasPriceOracle',
-      })
-    return contracts.gasPriceOracle.address
-  })()
+	const gasPriceOracleAddress = (() => {
+		if (gasPriceOracleAddress_) return gasPriceOracleAddress_;
+		if (chain) {
+			return getChainContractAddress({
+				chain,
+				contract: "gasPriceOracle",
+			});
+		}
+		return contracts.gasPriceOracle.address;
+	})();
 
-  // Populate transaction with required fields to accurately estimate gas.
-  const request = await prepareTransactionRequest(
-    client,
-    args as PrepareTransactionRequestParameters,
-  )
+	// Populate transaction with required fields to accurately estimate gas.
+	const request = await prepareTransactionRequest(
+		client,
+		args as PrepareTransactionRequestParameters,
+	);
 
-  assertRequest(request as AssertRequestParameters)
+	assertRequest(request as AssertRequestParameters);
 
-  const transaction = serializeTransaction({
-    ...request,
-    type: 'eip1559',
-  } as TransactionSerializable)
+	const transaction = serializeTransaction({
+		...request,
+		type: "eip1559",
+	} as TransactionSerializable);
 
-  return readContract(client, {
-    abi: gasPriceOracleAbi,
-    address: gasPriceOracleAddress,
-    functionName: 'getL1Fee',
-    args: [transaction as any],
-  })
+	return readContract(client, {
+		abi: gasPriceOracleAbi,
+		address: gasPriceOracleAddress,
+		functionName: "getL1Fee",
+		args: [transaction as any],
+	});
 }

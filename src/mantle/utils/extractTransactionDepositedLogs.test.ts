@@ -1,16 +1,16 @@
-import { expect, test } from 'vitest'
-import { mainnetClient } from '~test/src/utils.js'
+import { expect, test } from "vitest";
+import { mainnetClient } from "~test/src/utils.js";
 
-import { extractTransactionDepositedLogs } from './extractTransactionDepositedLogs.js'
+import { extractTransactionDepositedLogs } from "./extractTransactionDepositedLogs.js";
 
-test('default', async () => {
-  const receipt = await mainnetClient.getTransactionReceipt({
-    hash: '0xc9c0361bc3da9cd3560e48b469d0d6aac0e633e4897895edfd26a287f7c578ec',
-  })
+test("default", async () => {
+	const receipt = await mainnetClient.getTransactionReceipt({
+		hash: "0xc9c0361bc3da9cd3560e48b469d0d6aac0e633e4897895edfd26a287f7c578ec",
+	});
 
-  const logs = extractTransactionDepositedLogs(receipt)
+	const logs = extractTransactionDepositedLogs(receipt);
 
-  expect(logs).toMatchInlineSnapshot(`
+	expect(logs).toMatchInlineSnapshot(`
     [
       {
         "address": "0xbeb5fc579115071764c7423a4f12edde41f106ed",
@@ -312,5 +312,5 @@ test('default', async () => {
         "transactionIndex": 5,
       },
     ]
-  `)
-})
+  `);
+});

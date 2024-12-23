@@ -1,24 +1,24 @@
-import { expect, test } from 'vitest'
+import { expect, test } from "vitest";
 
-import { getTransactionReceipt } from '../../actions/index.js'
-import { http, createClient } from '../../index.js'
-import { optimismSepolia } from '../chains.js'
-import { extractWithdrawalMessageLogs } from './extractWithdrawalMessageLogs.js'
+import { getTransactionReceipt } from "../../actions/index.js";
+import { createClient, http } from "../../index.js";
+import { optimismSepolia } from "../chains.js";
+import { extractWithdrawalMessageLogs } from "./extractWithdrawalMessageLogs.js";
 
 const client = createClient({
-  chain: optimismSepolia,
-  transport: http(),
-})
+	chain: optimismSepolia,
+	transport: http(),
+});
 
-test('default', async () => {
-  const receipt = await getTransactionReceipt(client, {
-    hash: '0x078be3962b143952b4fd8567640b14c3682b8a941000c7d92394faf0e40cb1e8',
-  })
-  expect(receipt).toBeDefined()
+test("default", async () => {
+	const receipt = await getTransactionReceipt(client, {
+		hash: "0x078be3962b143952b4fd8567640b14c3682b8a941000c7d92394faf0e40cb1e8",
+	});
+	expect(receipt).toBeDefined();
 
-  const logs = extractWithdrawalMessageLogs(receipt)
+	const logs = extractWithdrawalMessageLogs(receipt);
 
-  expect(logs).toMatchInlineSnapshot(`
+	expect(logs).toMatchInlineSnapshot(`
     [
       {
         "address": "0x4200000000000000000000000000000000000016",
@@ -47,5 +47,5 @@ test('default', async () => {
         "transactionIndex": 1,
       },
     ]
-  `)
-})
+  `);
+});

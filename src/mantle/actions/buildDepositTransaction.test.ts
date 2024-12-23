@@ -1,30 +1,30 @@
-import { expect, test } from 'vitest'
+import { expect, test } from "vitest";
 
-import { accounts } from '~test/src/constants.js'
-import { baycContractConfig } from '../../../test/src/abis.js'
-import { anvilMainnet, anvilOptimism } from '../../../test/src/anvil.js'
-import { parseEther } from '../../index.js'
-import { base } from '../chains.js'
-import { buildDepositTransaction } from './buildDepositTransaction.js'
-import { depositTransaction } from './depositTransaction.js'
+import { accounts } from "~test/src/constants.js";
+import { baycContractConfig } from "../../../test/src/abis.js";
+import { anvilMainnet, anvilOptimism } from "../../../test/src/anvil.js";
+import { parseEther } from "../../index.js";
+import { base } from "../chains.js";
+import { buildDepositTransaction } from "./buildDepositTransaction.js";
+import { depositTransaction } from "./depositTransaction.js";
 
-const client = anvilMainnet.getClient()
+const client = anvilMainnet.getClient();
 const clientWithAccount = anvilMainnet.getClient({
-  account: accounts[0].address,
-})
+	account: accounts[0].address,
+});
 
-const optimismClient = anvilOptimism.getClient()
+const optimismClient = anvilOptimism.getClient();
 const optimismClientWithoutChain = anvilOptimism.getClient({
-  chain: false,
-})
+	chain: false,
+});
 
-test('default', async () => {
-  const request = await buildDepositTransaction(optimismClient, {
-    to: accounts[1].address,
-  })
-  const { targetChain, ...rest } = request
-  expect(targetChain).toBeDefined()
-  expect(rest).toMatchInlineSnapshot(`
+test("default", async () => {
+	const request = await buildDepositTransaction(optimismClient, {
+		to: accounts[1].address,
+	});
+	const { targetChain, ...rest } = request;
+	expect(targetChain).toBeDefined();
+	expect(rest).toMatchInlineSnapshot(`
     {
       "account": undefined,
       "request": {
@@ -36,20 +36,20 @@ test('default', async () => {
         "value": undefined,
       },
     }
-  `)
+  `);
 
-  const hash = await depositTransaction(clientWithAccount, request)
-  expect(hash).toBeDefined()
-})
+	const hash = await depositTransaction(clientWithAccount, request);
+	expect(hash).toBeDefined();
+});
 
-test('args: account', async () => {
-  const request = await buildDepositTransaction(optimismClient, {
-    account: accounts[0].address,
-    to: accounts[1].address,
-  })
-  const { targetChain, ...rest } = request
-  expect(targetChain).toBeDefined()
-  expect(rest).toMatchInlineSnapshot(`
+test("args: account", async () => {
+	const request = await buildDepositTransaction(optimismClient, {
+		account: accounts[0].address,
+		to: accounts[1].address,
+	});
+	const { targetChain, ...rest } = request;
+	expect(targetChain).toBeDefined();
+	expect(rest).toMatchInlineSnapshot(`
     {
       "account": {
         "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
@@ -64,21 +64,21 @@ test('args: account', async () => {
         "value": undefined,
       },
     }
-  `)
+  `);
 
-  const hash = await depositTransaction(client, request)
-  expect(hash).toBeDefined()
-})
+	const hash = await depositTransaction(client, request);
+	expect(hash).toBeDefined();
+});
 
-test('args: chain', async () => {
-  const request = await buildDepositTransaction(optimismClientWithoutChain, {
-    account: accounts[0].address,
-    chain: base,
-    to: accounts[1].address,
-  })
-  const { targetChain, ...rest } = request
-  expect(targetChain).toBeDefined()
-  expect(rest).toMatchInlineSnapshot(`
+test("args: chain", async () => {
+	const request = await buildDepositTransaction(optimismClientWithoutChain, {
+		account: accounts[0].address,
+		chain: base,
+		to: accounts[1].address,
+	});
+	const { targetChain, ...rest } = request;
+	expect(targetChain).toBeDefined();
+	expect(rest).toMatchInlineSnapshot(`
     {
       "account": {
         "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
@@ -93,21 +93,21 @@ test('args: chain', async () => {
         "value": undefined,
       },
     }
-  `)
+  `);
 
-  const hash = await depositTransaction(client, request)
-  expect(hash).toBeDefined()
-})
+	const hash = await depositTransaction(client, request);
+	expect(hash).toBeDefined();
+});
 
-test('args: data', async () => {
-  const request = await buildDepositTransaction(optimismClient, {
-    account: accounts[0].address,
-    data: '0xdeadbeef',
-    to: accounts[1].address,
-  })
-  const { targetChain, ...rest } = request
-  expect(targetChain).toBeDefined()
-  expect(rest).toMatchInlineSnapshot(`
+test("args: data", async () => {
+	const request = await buildDepositTransaction(optimismClient, {
+		account: accounts[0].address,
+		data: "0xdeadbeef",
+		to: accounts[1].address,
+	});
+	const { targetChain, ...rest } = request;
+	expect(targetChain).toBeDefined();
+	expect(rest).toMatchInlineSnapshot(`
     {
       "account": {
         "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
@@ -122,21 +122,21 @@ test('args: data', async () => {
         "value": undefined,
       },
     }
-  `)
+  `);
 
-  const hash = await depositTransaction(client, request)
-  expect(hash).toBeDefined()
-})
+	const hash = await depositTransaction(client, request);
+	expect(hash).toBeDefined();
+});
 
-test('args: isCreation', async () => {
-  const request = await buildDepositTransaction(optimismClient, {
-    account: accounts[0].address,
-    data: baycContractConfig.bytecode,
-    isCreation: true,
-  })
-  const { targetChain, ...rest } = request
-  expect(targetChain).toBeDefined()
-  expect(rest).toMatchInlineSnapshot(`
+test("args: isCreation", async () => {
+	const request = await buildDepositTransaction(optimismClient, {
+		account: accounts[0].address,
+		data: baycContractConfig.bytecode,
+		isCreation: true,
+	});
+	const { targetChain, ...rest } = request;
+	expect(targetChain).toBeDefined();
+	expect(rest).toMatchInlineSnapshot(`
     {
       "account": {
         "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
@@ -151,21 +151,21 @@ test('args: isCreation', async () => {
         "value": undefined,
       },
     }
-  `)
+  `);
 
-  const hash = await depositTransaction(client, request)
-  expect(hash).toBeDefined()
-})
+	const hash = await depositTransaction(client, request);
+	expect(hash).toBeDefined();
+});
 
-test('args: mint', async () => {
-  const request = await buildDepositTransaction(optimismClient, {
-    account: accounts[0].address,
-    to: accounts[1].address,
-    mint: parseEther('1'),
-  })
-  const { targetChain, ...rest } = request
-  expect(targetChain).toBeDefined()
-  expect(rest).toMatchInlineSnapshot(`
+test("args: mint", async () => {
+	const request = await buildDepositTransaction(optimismClient, {
+		account: accounts[0].address,
+		to: accounts[1].address,
+		mint: parseEther("1"),
+	});
+	const { targetChain, ...rest } = request;
+	expect(targetChain).toBeDefined();
+	expect(rest).toMatchInlineSnapshot(`
     {
       "account": {
         "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
@@ -180,21 +180,21 @@ test('args: mint', async () => {
         "value": undefined,
       },
     }
-  `)
+  `);
 
-  const hash = await depositTransaction(client, request)
-  expect(hash).toBeDefined()
-})
+	const hash = await depositTransaction(client, request);
+	expect(hash).toBeDefined();
+});
 
-test('args: value', async () => {
-  const request = await buildDepositTransaction(optimismClient, {
-    account: accounts[0].address,
-    to: accounts[1].address,
-    value: parseEther('1'),
-  })
-  const { targetChain, ...rest } = request
-  expect(targetChain).toBeDefined()
-  expect(rest).toMatchInlineSnapshot(`
+test("args: value", async () => {
+	const request = await buildDepositTransaction(optimismClient, {
+		account: accounts[0].address,
+		to: accounts[1].address,
+		value: parseEther("1"),
+	});
+	const { targetChain, ...rest } = request;
+	expect(targetChain).toBeDefined();
+	expect(rest).toMatchInlineSnapshot(`
     {
       "account": {
         "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
@@ -209,8 +209,8 @@ test('args: value', async () => {
         "value": 1000000000000000000n,
       },
     }
-  `)
+  `);
 
-  const hash = await depositTransaction(client, request)
-  expect(hash).toBeDefined()
-})
+	const hash = await depositTransaction(client, request);
+	expect(hash).toBeDefined();
+});

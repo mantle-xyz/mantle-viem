@@ -1,125 +1,125 @@
-import { beforeEach, expect, test } from 'vitest'
-import { anvilMainnet } from '../../../test/src/anvil.js'
-import { accounts } from '../../../test/src/constants.js'
-import { getTransactionReceipt, mine, reset } from '../../actions/index.js'
-import { optimism } from '../../op-stack/chains.js'
-import { finalizeWithdrawal } from './finalizeWithdrawal.js'
+import { beforeEach, expect, test } from "vitest";
+import { anvilMainnet } from "../../../test/src/anvil.js";
+import { accounts } from "../../../test/src/constants.js";
+import { getTransactionReceipt, mine, reset } from "../../actions/index.js";
+import { optimism } from "../../op-stack/chains.js";
+import { finalizeWithdrawal } from "./finalizeWithdrawal.js";
 
-const client = anvilMainnet.getClient()
+const client = anvilMainnet.getClient();
 
 const withdrawal = {
-  nonce:
-    1766847064778384329583297500742918515827483896875618958121606201292631377n,
-  sender: '0x4200000000000000000000000000000000000007',
-  target: '0x25ace71c97B33Cc4729CF772ae268934F7ab5fA1',
-  value: 88196830953025947900n,
-  gasLimit: 287624n,
-  data: '0xd764ad0b0001000000000000000000000000000000000000000000000000000000002d51000000000000000000000000420000000000000000000000000000000000001000000000000000000000000099c9fc46f92e8a1c0dec1b1747d010903e884be1000000000000000000000000000000000000000000000004c7fa16770649c8fc000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c000000000000000000000000000000000000000000000000000000000000000a41635f5fd000000000000000000000000160d7aa81e6fc30210aeb915c3bb1f55bfa86b37000000000000000000000000160d7aa81e6fc30210aeb915c3bb1f55bfa86b37000000000000000000000000000000000000000000000004c7fa16770649c8fc0000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-  withdrawalHash:
-    '0x539dfd84b3939c6d2f61e1fbaa176a70e6a433e222093c3fea872ac36527d6ac',
-} as const
+	nonce:
+		1766847064778384329583297500742918515827483896875618958121606201292631377n,
+	sender: "0x4200000000000000000000000000000000000007",
+	target: "0x25ace71c97B33Cc4729CF772ae268934F7ab5fA1",
+	value: 88196830953025947900n,
+	gasLimit: 287624n,
+	data: "0xd764ad0b0001000000000000000000000000000000000000000000000000000000002d51000000000000000000000000420000000000000000000000000000000000001000000000000000000000000099c9fc46f92e8a1c0dec1b1747d010903e884be1000000000000000000000000000000000000000000000004c7fa16770649c8fc000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c000000000000000000000000000000000000000000000000000000000000000a41635f5fd000000000000000000000000160d7aa81e6fc30210aeb915c3bb1f55bfa86b37000000000000000000000000160d7aa81e6fc30210aeb915c3bb1f55bfa86b37000000000000000000000000000000000000000000000004c7fa16770649c8fc0000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+	withdrawalHash:
+		"0x539dfd84b3939c6d2f61e1fbaa176a70e6a433e222093c3fea872ac36527d6ac",
+} as const;
 
 beforeEach(async () => {
-  await reset(client, {
-    blockNumber: 16280770n,
-    jsonRpcUrl: anvilMainnet.forkUrl,
-  })
-})
+	await reset(client, {
+		blockNumber: 16280770n,
+		jsonRpcUrl: anvilMainnet.forkUrl,
+	});
+});
 
-test('default', async () => {
-  const hash = await finalizeWithdrawal(client, {
-    account: accounts[0].address,
-    targetChain: optimism,
-    withdrawal,
-  })
-  expect(hash).toBeDefined()
+test("default", async () => {
+	const hash = await finalizeWithdrawal(client, {
+		account: accounts[0].address,
+		targetChain: optimism,
+		withdrawal,
+	});
+	expect(hash).toBeDefined();
 
-  await mine(client, { blocks: 1 })
+	await mine(client, { blocks: 1 });
 
-  const receipt = await getTransactionReceipt(client, {
-    hash,
-  })
-  expect(receipt.status).toEqual('success')
-})
+	const receipt = await getTransactionReceipt(client, {
+		hash,
+	});
+	expect(receipt.status).toEqual("success");
+});
 
-test('args: chain (nullish)', async () => {
-  const hash = await finalizeWithdrawal(client, {
-    account: accounts[0].address,
-    chain: null,
-    targetChain: optimism,
-    withdrawal,
-    gas: 420_000n,
-  })
-  expect(hash).toBeDefined()
+test("args: chain (nullish)", async () => {
+	const hash = await finalizeWithdrawal(client, {
+		account: accounts[0].address,
+		chain: null,
+		targetChain: optimism,
+		withdrawal,
+		gas: 420_000n,
+	});
+	expect(hash).toBeDefined();
 
-  await mine(client, { blocks: 1 })
+	await mine(client, { blocks: 1 });
 
-  const receipt = await getTransactionReceipt(client, {
-    hash,
-  })
-  expect(receipt.status).toEqual('success')
-})
+	const receipt = await getTransactionReceipt(client, {
+		hash,
+	});
+	expect(receipt.status).toEqual("success");
+});
 
-test('args: gas', async () => {
-  const hash = await finalizeWithdrawal(client, {
-    account: accounts[0].address,
-    targetChain: optimism,
-    withdrawal,
-    gas: 420_000n,
-  })
-  expect(hash).toBeDefined()
+test("args: gas", async () => {
+	const hash = await finalizeWithdrawal(client, {
+		account: accounts[0].address,
+		targetChain: optimism,
+		withdrawal,
+		gas: 420_000n,
+	});
+	expect(hash).toBeDefined();
 
-  await mine(client, { blocks: 1 })
+	await mine(client, { blocks: 1 });
 
-  const receipt = await getTransactionReceipt(client, {
-    hash,
-  })
-  expect(receipt.status).toEqual('success')
-})
+	const receipt = await getTransactionReceipt(client, {
+		hash,
+	});
+	expect(receipt.status).toEqual("success");
+});
 
-test('args: gas (nullish)', async () => {
-  const hash = await finalizeWithdrawal(client, {
-    account: accounts[0].address,
-    targetChain: optimism,
-    withdrawal,
-    gas: null,
-  })
-  expect(hash).toBeDefined()
+test("args: gas (nullish)", async () => {
+	const hash = await finalizeWithdrawal(client, {
+		account: accounts[0].address,
+		targetChain: optimism,
+		withdrawal,
+		gas: null,
+	});
+	expect(hash).toBeDefined();
 
-  await mine(client, { blocks: 1 })
+	await mine(client, { blocks: 1 });
 
-  const receipt = await getTransactionReceipt(client, {
-    hash,
-  })
-  expect(receipt.status).toEqual('success')
-})
+	const receipt = await getTransactionReceipt(client, {
+		hash,
+	});
+	expect(receipt.status).toEqual("success");
+});
 
-test('args: portal address', async () => {
-  const hash = await finalizeWithdrawal(client, {
-    account: accounts[0].address,
-    withdrawal,
-    gas: 420_000n,
-    portalAddress: optimism.contracts.portal[1].address,
-  })
-  expect(hash).toBeDefined()
+test("args: portal address", async () => {
+	const hash = await finalizeWithdrawal(client, {
+		account: accounts[0].address,
+		withdrawal,
+		gas: 420_000n,
+		portalAddress: optimism.contracts.portal[1].address,
+	});
+	expect(hash).toBeDefined();
 
-  await mine(client, { blocks: 1 })
+	await mine(client, { blocks: 1 });
 
-  const receipt = await getTransactionReceipt(client, {
-    hash,
-  })
-  expect(receipt.status).toEqual('success')
-})
+	const receipt = await getTransactionReceipt(client, {
+		hash,
+	});
+	expect(receipt.status).toEqual("success");
+});
 
-test('error: small gas', async () => {
-  await expect(() =>
-    finalizeWithdrawal(client, {
-      account: accounts[0].address,
-      targetChain: optimism,
-      withdrawal,
-      gas: 69n,
-    }),
-  ).rejects.toThrowErrorMatchingInlineSnapshot(`
+test("error: small gas", async () => {
+	await expect(() =>
+		finalizeWithdrawal(client, {
+			account: accounts[0].address,
+			targetChain: optimism,
+			withdrawal,
+			gas: 69n,
+		}),
+	).rejects.toThrowErrorMatchingInlineSnapshot(`
     [ContractFunctionExecutionError: Transaction creation failed.
 
     URL: http://localhost
@@ -140,5 +140,5 @@ test('error: small gas', async () => {
     Docs: https://viem.sh/docs/contract/estimateContractGas
     Details: Out of gas: gas required exceeds allowance: 69
     Version: viem@x.y.z]
-  `)
-})
+  `);
+});

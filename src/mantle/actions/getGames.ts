@@ -1,44 +1,44 @@
 import {
-  type ReadContractErrorType,
-  readContract,
-} from '../../actions/public/readContract.js'
-import type { Client } from '../../clients/createClient.js'
-import type { Transport } from '../../clients/transports/createTransport.js'
-import type { ErrorType } from '../../errors/utils.js'
-import type { Account } from '../../types/account.js'
+	readContract,
+	type ReadContractErrorType,
+} from "../../actions/public/readContract.js";
+import type { Client } from "../../clients/createClient.js";
+import type { Transport } from "../../clients/transports/createTransport.js";
+import type { ErrorType } from "../../errors/utils.js";
+import type { Account } from "../../types/account.js";
 import type {
-  Chain,
-  DeriveChain,
-  GetChainParameter,
-} from '../../types/chain.js'
-import { decodeAbiParameters } from '../../utils/abi/decodeAbiParameters.js'
-import { disputeGameFactoryAbi, portal2Abi } from '../abis.js'
-import type { GetContractAddressParameter } from '../types/contract.js'
-import type { Game } from '../types/withdrawal.js'
+	Chain,
+	DeriveChain,
+	GetChainParameter,
+} from "../../types/chain.js";
+import { decodeAbiParameters } from "../../utils/abi/decodeAbiParameters.js";
+import { disputeGameFactoryAbi, portal2Abi } from "../abis.js";
+import type { GetContractAddressParameter } from "../types/contract.js";
+import type { Game } from "../types/withdrawal.js";
 
 export type GetGamesParameters<
-  chain extends Chain | undefined = Chain | undefined,
-  chainOverride extends Chain | undefined = Chain | undefined,
-  _derivedChain extends Chain | undefined = DeriveChain<chain, chainOverride>,
+	chain extends Chain | undefined = Chain | undefined,
+	chainOverride extends Chain | undefined = Chain | undefined,
+	_derivedChain extends Chain | undefined = DeriveChain<chain, chainOverride>,
 > = GetChainParameter<chain, chainOverride> &
-  GetContractAddressParameter<
-    _derivedChain,
-    'portal' | 'disputeGameFactory'
-  > & {
-    /**
-     * Filter by minimum block number of the dispute games.
-     */
-    l2BlockNumber?: bigint | undefined
-    /**
-     * Limit of games to extract.
-     * @default 100
-     */
-    limit?: number | undefined
-  }
+	GetContractAddressParameter<
+		_derivedChain,
+		"portal" | "disputeGameFactory"
+	> & {
+		/**
+		 * Filter by minimum block number of the dispute games.
+		 */
+		l2BlockNumber?: bigint | undefined;
+		/**
+		 * Limit of games to extract.
+		 * @default 100
+		 */
+		limit?: number | undefined;
+	};
 export type GetGamesReturnType = (Game & {
-  l2BlockNumber: bigint
-})[]
-export type GetGamesErrorType = ReadContractErrorType | ErrorType
+	l2BlockNumber: bigint;
+})[];
+export type GetGamesErrorType = ReadContractErrorType | ErrorType;
 
 /**
  * Retrieves dispute games for an L2.
@@ -64,70 +64,72 @@ export type GetGamesErrorType = ReadContractErrorType | ErrorType
  * })
  */
 export async function getGames<
-  chain extends Chain | undefined,
-  account extends Account | undefined,
-  chainOverride extends Chain | undefined = undefined,
+	chain extends Chain | undefined,
+	account extends Account | undefined,
+	chainOverride extends Chain | undefined = undefined,
 >(
-  client: Client<Transport, chain, account>,
-  parameters: GetGamesParameters<chain, chainOverride>,
+	client: Client<Transport, chain, account>,
+	parameters: GetGamesParameters<chain, chainOverride>,
 ): Promise<GetGamesReturnType> {
-  const {
-    chain = client.chain,
-    l2BlockNumber,
-    limit = 100,
-    targetChain,
-  } = parameters
+	const {
+		chain = client.chain,
+		l2BlockNumber,
+		limit = 100,
+		targetChain,
+	} = parameters;
 
-  const portalAddress = (() => {
-    if (parameters.portalAddress) return parameters.portalAddress
-    if (chain) return targetChain!.contracts.portal[chain.id].address
-    return Object.values(targetChain!.contracts.portal)[0].address
-  })()
+	const portalAddress = (() => {
+		if (parameters.portalAddress) return parameters.portalAddress;
+		if (chain) return targetChain!.contracts.portal[chain.id].address;
+		return Object.values(targetChain!.contracts.portal)[0].address;
+	})();
 
-  const disputeGameFactoryAddress = (() => {
-    if (parameters.disputeGameFactoryAddress)
-      return parameters.disputeGameFactoryAddress
-    if (chain)
-      return targetChain!.contracts.disputeGameFactory[chain.id].address
-    return Object.values(targetChain!.contracts.disputeGameFactory)[0].address
-  })()
+	const disputeGameFactoryAddress = (() => {
+		if (parameters.disputeGameFactoryAddress) {
+			return parameters.disputeGameFactoryAddress;
+		}
+		if (chain) {
+			return targetChain!.contracts.disputeGameFactory[chain.id].address;
+		}
+		return Object.values(targetChain!.contracts.disputeGameFactory)[0].address;
+	})();
 
-  const [gameCount, gameType] = await Promise.all([
-    readContract(client, {
-      abi: disputeGameFactoryAbi,
-      functionName: 'gameCount',
-      args: [],
-      address: disputeGameFactoryAddress,
-    }),
-    readContract(client, {
-      abi: portal2Abi,
-      functionName: 'respectedGameType',
-      address: portalAddress,
-    }),
-  ])
+	const [gameCount, gameType] = await Promise.all([
+		readContract(client, {
+			abi: disputeGameFactoryAbi,
+			functionName: "gameCount",
+			args: [],
+			address: disputeGameFactoryAddress,
+		}),
+		readContract(client, {
+			abi: portal2Abi,
+			functionName: "respectedGameType",
+			address: portalAddress,
+		}),
+	]);
 
-  const games = (
-    (await readContract(client, {
-      abi: disputeGameFactoryAbi,
-      functionName: 'findLatestGames',
-      address: disputeGameFactoryAddress,
-      args: [
-        gameType,
-        BigInt(Math.max(0, Number(gameCount - 1n))),
-        BigInt(Math.min(limit, Number(gameCount))),
-      ],
-    })) as Game[]
-  )
-    .map((game) => {
-      const [blockNumber] = decodeAbiParameters(
-        [{ type: 'uint256' }],
-        game.extraData,
-      )
-      return !l2BlockNumber || blockNumber > l2BlockNumber
-        ? { ...game, l2BlockNumber: blockNumber }
-        : null
-    })
-    .filter(Boolean) as GetGamesReturnType
+	const games = (
+		(await readContract(client, {
+			abi: disputeGameFactoryAbi,
+			functionName: "findLatestGames",
+			address: disputeGameFactoryAddress,
+			args: [
+				gameType,
+				BigInt(Math.max(0, Number(gameCount - 1n))),
+				BigInt(Math.min(limit, Number(gameCount))),
+			],
+		})) as Game[]
+	)
+		.map((game) => {
+			const [blockNumber] = decodeAbiParameters(
+				[{ type: "uint256" }],
+				game.extraData,
+			);
+			return !l2BlockNumber || blockNumber > l2BlockNumber
+				? { ...game, l2BlockNumber: blockNumber }
+				: null;
+		})
+		.filter(Boolean) as GetGamesReturnType;
 
-  return games
+	return games;
 }

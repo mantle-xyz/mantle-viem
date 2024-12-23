@@ -1,15 +1,15 @@
-import { expect, test } from 'vitest'
-import { mainnetClient } from '~test/src/utils.js'
-import { getL2TransactionHashes } from './getL2TransactionHashes.js'
+import { expect, test } from "vitest";
+import { mainnetClient } from "~test/src/utils.js";
+import { getL2TransactionHashes } from "./getL2TransactionHashes.js";
 
-test('default', async () => {
-  const receipt = await mainnetClient.getTransactionReceipt({
-    hash: '0x11fcc5e645f504064fd4e45120f6543115149449dfb44b7887000f3ed18b738a',
-  })
+test("default", async () => {
+	const receipt = await mainnetClient.getTransactionReceipt({
+		hash: "0x11fcc5e645f504064fd4e45120f6543115149449dfb44b7887000f3ed18b738a",
+	});
 
-  const l2Hashes = getL2TransactionHashes(receipt)
+	const l2Hashes = getL2TransactionHashes(receipt);
 
-  expect(l2Hashes).toMatchInlineSnapshot(`
+	expect(l2Hashes).toMatchInlineSnapshot(`
     [
       "0x59755e7eb89d13ec6261e412d8c50415fd6397fd7639b06db33b7d141b15ea51",
       "0x1fec4d9c3f6611acb61d3926c9c60bd2875467a1fbeece7032d5192776239336",
@@ -20,5 +20,5 @@ test('default', async () => {
       "0x0777d0c1c9c1c9d5207b6d8fd40895a5c0780c5cc673dcedfe106c7fbb33d327",
       "0x6c8340ffe08537c62a29a36597e6529bcf5b00024ac32673397b0fa87353f0a0",
     ]
-  `)
-})
+  `);
+});
