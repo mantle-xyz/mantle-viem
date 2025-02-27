@@ -15,7 +15,17 @@ Internally performs a contract write to the [`depositMNT` function](https://gith
 
 ```ts [example.ts]
 import { mantle } from 'mantle-viem/chains'
+import { mantle } from 'viem'
 import { account, walletClientL1 } from './config'
+
+// User might need to update allowance for first time deposit.
+const approvalHash = await walletClientL1.writeContract({
+  account,
+  address: "0x3c3a81e81dc49a522a592e7622a7e711c06bf354", //L1 MNT
+  abi:erc20Abi,
+  functionName:'approve',
+  args:[mantle.contracts.l1StandardBridge[1].address,parseEther('1')]
+})
 
 const hash = await walletClientL1.depositMNT({
   account,
