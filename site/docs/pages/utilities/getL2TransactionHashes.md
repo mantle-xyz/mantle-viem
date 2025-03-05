@@ -11,7 +11,7 @@ Useful for extracting L2 hashes from an **L1 Transaction Receipt**.
 ## Import
 
 ```ts
-import { getL2TransactionHashes } from 'mantle-viem'
+import { getL2TransactionHashes } from '@mantleio/viem'
 ```
 
 ## Usage
@@ -20,7 +20,7 @@ import { getL2TransactionHashes } from 'mantle-viem'
 import {
   extractTransactionDepositedLogs,
   getL2TransactionHashes,
-} from 'mantle-viem'
+} from '@mantleio/viem'
 
 const receipt = await client.getTransactionReceipt({
   hash: '0xa08acae48f12243bccd7153c88d892673d5578cce4ee9988c0332e8bba47436b',

@@ -9,13 +9,13 @@ Computes the source hash of a deposit transaction.
 ## Import
 
 ```ts
-import { getSourceHash } from 'mantle-viem'
+import { getSourceHash } from '@mantleio/viem'
 ```
 
 ## Usage
 
 ```ts
-import { getSourceHash } from 'mantle-viem'
+import { getSourceHash } from '@mantleio/viem'
 
 // User Deposit
 const sourceHash = getSourceHash({

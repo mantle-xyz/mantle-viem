@@ -9,13 +9,13 @@ Computes the withdrawal hash storage slot to be used when proving a withdrawal.
 ## Import
 
 ```ts
-import { getWithdrawalHashStorageSlot } from 'mantle-viem'
+import { getWithdrawalHashStorageSlot } from '@mantleio/viem'
 ```
 
 ## Usage
 
 ```ts
-import { getWithdrawalHashStorageSlot } from 'mantle-viem'
+import { getWithdrawalHashStorageSlot } from '@mantleio/viem'
 
 const slot = getWithdrawalHashStorageSlot({ // [!code hl]
   withdrawalHash:

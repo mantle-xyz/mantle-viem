@@ -12,7 +12,7 @@ Retrieves the first L2 output proposal that occurred after a provided block numb
 :::code-group
 
 ```ts [example.ts]
-import { mantle } from 'mantle-viem/chains'
+import { mantle } from '@mantleio/viem/chains'
 import { account, publicClientL1 } from './config'
 
 const output = await publicClientL1.getL2Output({ // [!code hl]
@@ -22,8 +22,8 @@ const output = await publicClientL1.getL2Output({ // [!code hl]
 ```
 
 ```ts [config.ts]
-import { publicActionsL1 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL1 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, custom, http } from 'viem'
 import { mainnet } from 'viem/chains'
 

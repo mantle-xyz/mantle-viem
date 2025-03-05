@@ -9,13 +9,13 @@ Decodes opaque deposit data found in the `TransactionDeposited` event log data.
 ## Import
 
 ```ts
-import { opaqueDataToDepositData } from 'mantle-viem'
+import { opaqueDataToDepositData } from '@mantleio/viem'
 ```
 
 ## Usage
 
 ```ts
-import { opaqueDataToDepositData } from 'mantle-viem'
+import { opaqueDataToDepositData } from '@mantleio/viem'
 
 const data = opaqueDataToDepositData(
   '0x00000000000000000000000000000000000000000000000000000000000001a40000000000000000000000000000000000000000000000000000000000000045000000000000526c01deadbeef',

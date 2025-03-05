@@ -9,13 +9,13 @@ Gets withdrawal messages emitted from the [`MessagePassed` log](https://github.c
 ## Import
 
 ```ts
-import { getWithdrawals } from 'mantle-viem'
+import { getWithdrawals } from '@mantleio/viem'
 ```
 
 ## Usage
 
 ```ts
-import { extractTransactionDepositedLogs, getWithdrawals } from 'mantle-viem'
+import { extractTransactionDepositedLogs, getWithdrawals } from '@mantleio/viem'
 
 const receipt = await client.getTransactionReceipt({
   hash: '0xa08acae48f12243bccd7153c88d892673d5578cce4ee9988c0332e8bba47436b',

@@ -14,7 +14,7 @@ Internally performs a contract write to the [`withdraw` function](https://github
 :::code-group
 
 ```ts [example.ts]
-import { mantle } from 'mantle-viem'
+import { mantle } from '@mantleio/viem'
 import { account, walletClientL2 } from './config'
 
 const hash = await walletClientL2.initiateMNTWithdrawal({
@@ -29,7 +29,7 @@ const hash = await walletClientL2.initiateMNTWithdrawal({
 import { createWalletClient, custom } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { mainnet } from 'viem/chains'
-import { walletActionsL2 } from 'mantle-viem'
+import { walletActionsL2 } from '@mantleio/viem'
 
 export const walletClientL2 = createWalletClient({
   chain: mainnet,
@@ -110,7 +110,7 @@ const hash = await client.initiateMNTWithdrawal({
 The L2 chain. If there is a mismatch between the wallet's current chain & this chain, an error will be thrown.
 
 ```ts
-import { mantle } from 'mantle-viem/chains'
+import { mantle } from '@mantleio/viem/chains'
 
 const hash = await client.initiateMNTWithdrawal({
   account: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
