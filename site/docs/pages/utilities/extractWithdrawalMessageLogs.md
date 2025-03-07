@@ -9,13 +9,13 @@ Extracts [`MessagePassed` logs](https://github.com/mantlenetworkio/mantle-v2/blo
 ## Import
 
 ```ts
-import { extractWithdrawalMessageLogs } from 'mantle-viem'
+import { extractWithdrawalMessageLogs } from '@mantleio/viem'
 ```
 
 ## Usage
 
 ```ts
-import { extractWithdrawalMessageLogs } from 'mantle-viem'
+import { extractWithdrawalMessageLogs } from '@mantleio/viem'
 
 const receipt = await client.getTransactionReceipt({
   hash: '0xc9c0361bc3da9cd3560e48b469d0d6aac0e633e4897895edfd26a287f7c578ec',

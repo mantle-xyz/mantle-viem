@@ -23,7 +23,7 @@ Here is an end-to-end overview of how to execute a deposit transaction. We will 
 :::code-group
 
 ```ts [deposit.ts]
-import { getL2TransactionHashes } from 'mantle-viem'
+import { getL2TransactionHashes } from '@mantleio/viem'
 import {
   account,
   publicClientL1,
@@ -51,8 +51,8 @@ const l2Receipt = await publicClientL2.waitForTransactionReceipt({
 ```
 
 ```ts [config.ts (JSON-RPC Account)]
-import { publicActionsL2, walletActionsL1 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL2, walletActionsL1 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, createWalletClient, custom, http } from 'viem'
 import { mainnet } from 'viem/chains'
 
@@ -79,8 +79,8 @@ export const publicClientL2 = createPublicClient({
 ```
 
 ```ts [config.ts (Local Account)]
-import { publicActionsL2, walletActionsL1 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL2, walletActionsL1 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, createWalletClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
 
@@ -123,8 +123,8 @@ The example belows how to set up a Client for either a **JSON-RPC Account (Brows
 
 ```ts [config.ts (JSON-RPC Account)]
 // Import Viem modules.
-import { publicActionsL2, walletActionsL1 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL2, walletActionsL1 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, createWalletClient, custom, http } from 'viem'
 import { mainnet } from 'viem/chains'
 
@@ -152,8 +152,8 @@ export const publicClientL2 = createPublicClient({
 
 ```ts [config.ts (Local Account)]
 // Import Viem modules.
-import { publicActionsL2, walletActionsL1 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL2, walletActionsL1 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, createWalletClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
 
@@ -209,8 +209,8 @@ const hash = await walletClientL1.depositTransaction({ // [!code focus]
 
 ```ts [config.ts (JSON-RPC Account)]
 // Import Viem modules.
-import { publicActionsL2, walletActionsL1 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL2, walletActionsL1 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, createWalletClient, custom, http } from 'viem'
 import { mainnet } from 'viem/chains'
 
@@ -237,8 +237,8 @@ export const clientL2 = createClient({
 
 ```ts [config.ts (Local Account)]
 // Import Viem modules.
-import { publicActionsL2, walletActionsL1 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL2, walletActionsL1 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, createWalletClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
 
@@ -297,8 +297,8 @@ const receipt = await publicClientL1.waitForTransactionReceipt({ hash }) // [!co
 
 ```ts [config.ts (JSON-RPC Account)]
 // Import Viem modules.
-import { publicActionsL2, walletActionsL1 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL2, walletActionsL1 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, createWalletClient, custom, http } from 'viem'
 import { mainnet } from 'viem/chains'
 
@@ -325,8 +325,8 @@ export const clientL2 = createClient({
 
 ```ts [config.ts (Local Account)]
 // Import Viem modules.
-import { publicActionsL2, walletActionsL1 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL2, walletActionsL1 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, createWalletClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
 
@@ -382,8 +382,8 @@ const [l2Hash] = getL2TransactionHashes(receipt) // [!code focus]
 
 ```ts [config.ts (JSON-RPC Account)]
 // Import Viem modules.
-import { publicActionsL2, walletActionsL1 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL2, walletActionsL1 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, createWalletClient, custom, http } from 'viem'
 import { mainnet } from 'viem/chains'
 
@@ -410,8 +410,8 @@ export const clientL2 = createClient({
 
 ```ts [config.ts (Local Account)]
 // Import Viem modules.
-import { publicActionsL2, walletActionsL1 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL2, walletActionsL1 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, createWalletClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
 
@@ -474,8 +474,8 @@ const l2Receipt = await publicClientL2.waitForTransactionReceipt({ // [!code foc
 
 ```ts [config.ts (JSON-RPC Account)]
 // Import Viem modules.
-import { publicActionsL2, walletActionsL1 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL2, walletActionsL1 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, createWalletClient, custom, http } from 'viem'
 import { mainnet } from 'viem/chains'
 
@@ -502,8 +502,8 @@ export const clientL2 = createClient({
 
 ```ts [config.ts (Local Account)]
 // Import Viem modules.
-import { publicActionsL2, walletActionsL1 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL2, walletActionsL1 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, createWalletClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
 

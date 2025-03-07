@@ -9,13 +9,13 @@ Serializes a transaction object, with support for Mantle Optimism transactions. 
 ## Import
 
 ```ts
-import { serializeTransaction } from 'mantle-viem'
+import { serializeTransaction } from '@mantleio/viem'
 ```
 
 ## Usage
 
 ```ts
-import { serializeTransaction } from 'mantle-viem'
+import { serializeTransaction } from '@mantleio/viem'
 
 const serialized = serializeTransaction({
   chainId: 1,
@@ -33,7 +33,7 @@ const serialized = serializeTransaction({
 The `serializeTransaction` module from `mantle-viem` also supports serializing deposit transactions:
 
 ```ts
-import { serializeTransaction } from 'mantle-viem'
+import { serializeTransaction } from '@mantleio/viem'
 import { parseEther } from 'viem'
 
 const serialized = serializeTransaction({

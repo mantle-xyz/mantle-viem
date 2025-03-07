@@ -14,8 +14,17 @@ Internally performs a contract write to the [`withdraw` function](https://github
 :::code-group
 
 ```ts [example.ts]
-import { mantle } from 'mantle-viem'
+import { mantle } from '@mantleio/viem'
 import { account, walletClientL2 } from './config'
+
+// User might need to update allowance for first time deposit.
+const approvalHash = await walletClientL2.writeContract({
+  account,
+  address: "0xdeaddeaddeaddeaddeaddeaddeaddeaddead1111", //L2 ETH
+  abi:erc20Abi,
+  functionName:'approve',
+  args:[mantle.contracts.l2StandardBridge.address,parseEther('1')]
+})
 
 const hash = await walletClientL2.initiateETHWithdrawal({
   account,
@@ -29,7 +38,7 @@ const hash = await walletClientL2.initiateETHWithdrawal({
 import { createWalletClient, custom } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { mainnet } from 'viem/chains'
-import { walletActionsL2 } from 'mantle-viem'
+import { walletActionsL2 } from '@mantleio/viem'
 
 export const walletClientL2 = createWalletClient({
   chain: mainnet,
@@ -110,7 +119,7 @@ const hash = await client.initiateETHWithdrawal({
 The L2 chain. If there is a mismatch between the wallet's current chain & this chain, an error will be thrown.
 
 ```ts
-import { mantle } from 'mantle-viem/chains'
+import { mantle } from '@mantleio/viem/chains'
 
 const hash = await client.initiateETHWithdrawal({
   account: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',

@@ -14,7 +14,7 @@ Internally calls [`getTimeToFinalize`](/actions/getTimeToFinalize) and waits the
 :::code-group
 
 ```ts [example.ts]
-import { mantle } from 'mantle-viem/chains'
+import { mantle } from '@mantleio/viem/chains'
 import { account, publicClientL1, publicClientL2 } from './config'
 
 const receipt = await publicClientL2.getTransactionReceipt({
@@ -30,8 +30,8 @@ await publicClientL1.waitToFinalize({ // [!code hl]
 ```
 
 ```ts [config.ts]
-import { publicActionsL1 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL1 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, custom, http } from 'viem'
 import { mainnet } from 'viem/chains'
 

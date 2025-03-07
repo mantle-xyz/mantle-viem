@@ -6,5 +6,5 @@ The following chains are implemented on the Mantle Viem:
 import {
   mantle, // [!code hl]
   mantleSepoliaTestnet, // [!code hl]
-} from 'mantle-viem/chains'
+} from '@mantleio/viem/chains'
 ```

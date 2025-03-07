@@ -42,8 +42,8 @@ const hash = await walletClientL1.proveWithdrawal(args)
 import { createPublicClient, createWalletClient, custom, http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { mainnet } from 'viem/chains'
-import { mantle } from 'mantle-viem/chains'
-import { publicClientL1, publicActionsL2, walletActionsL1 } from 'mantle-viem'
+import { mantle } from '@mantleio/viem/chains'
+import { publicClientL1, publicActionsL2, walletActionsL1 } from '@mantleio/viem'
 
 
 export const walletClientL1 = createWalletClient({
@@ -89,8 +89,8 @@ const hash = await walletClientL1.proveWithdrawal(args)
 ```
 
 ```ts [config.ts (JSON-RPC Account)]
-import { publicActionsL2, walletActionsL1 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL2, walletActionsL1 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, createWalletClient, custom, http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { mainnet } from 'viem/chains'
@@ -112,8 +112,8 @@ export const publicClientL2 = createPublicClient({
 ```
 
 ```ts [config.ts (Local Account)]
-import { publicActionsL2, walletActionsL1 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL2, walletActionsL1 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, createWalletClient, custom, http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { mainnet } from 'viem/chains'

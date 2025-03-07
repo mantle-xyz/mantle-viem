@@ -26,8 +26,8 @@ const output = await publicClientL1.waitToProve({ // [!code hl]
 ```
 
 ```ts [config.ts]
-import { publicActionsL1 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL1 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, custom, http } from 'viem'
 import { mainnet } from 'viem/chains'
 

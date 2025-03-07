@@ -12,7 +12,7 @@ Estimates gas required to prove a withdrawal that occurred on an L2.
 :::code-group
 
 ```ts [example.ts]
-import { mantle } from 'mantle-viem/chains'
+import { mantle } from '@mantleio/viem/chains'
 import { account, publicClientL1 } from './config'
 
 const gas = await publicClientL1.estimateProveWithdrawalGas({ // [!code hl]
@@ -29,7 +29,7 @@ const gas = await publicClientL1.estimateProveWithdrawalGas({ // [!code hl]
 import { createPublicClient, createWalletClient, custom, http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { mainnet } from 'viem/chains'
-import { publicActionsL1 } from 'mantle-viem'
+import { publicActionsL1 } from '@mantleio/viem'
 
 export const publicClientL1 = createPublicClient({
   chain: mainnet,

@@ -14,7 +14,7 @@ Internally performs a contract write to the [`depositETH` function](https://gith
 :::code-group
 
 ```ts [example.ts]
-import { mantle } from 'mantle-viem/chains'
+import { mantle } from '@mantleio/viem/chains'
 import { account, walletClientL1 } from './config'
 
 const hash = await walletClientL1.depositETH({
@@ -30,12 +30,12 @@ const hash = await walletClientL1.depositETH({
 import { createWalletClient, custom } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { mainnet } from 'viem/chains'
-import { mantle } from 'mantle-viem/chains'
-import { walletActionsL1 } from 'mantle-viem'
+import { mantle } from '@mantleio/viem/chains'
+import { walletActionsL1 } from '@mantleio/viem'
 
 import { mainnet } from 'viem/chains'
-import { mantle } from 'mantle-viem/chains'
-import { publicActionsL2, walletActionsL1 } from 'mantle-viem'
+import { mantle } from '@mantleio/viem/chains'
+import { publicActionsL2, walletActionsL1 } from '@mantleio/viem'
 
 export const walletClientL1 = createWalletClient({
   chain: mainnet,

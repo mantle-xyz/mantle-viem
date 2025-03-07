@@ -9,13 +9,13 @@ Converts an opaque data into a structured deposit data object. This includes ext
 ## Import
 
 ```ts
-import { opaqueDataToDepositData } from 'mantle-viem'
+import { opaqueDataToDepositData } from '@mantleio/viem'
 ```
 
 ## Usage
 
 ```ts
-import { opaqueDataToDepositData } from 'mantle-viem'
+import { opaqueDataToDepositData } from '@mantleio/viem'
 
 const opaqueData =
   '0x00000000000000000000000000000000000000000000000000470DE4DF82000000000000000000000000000000000000000000000000000000470DE4DF82000000000000000186A00001'

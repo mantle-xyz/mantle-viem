@@ -36,7 +36,7 @@ bun i mantle-viem
 Firstly, set up your [Client](https://viem.sh/docs/clients/intro) with a desired [Transport](https://viem.sh/docs/clients/intro) & Mantle Chain from mantle-viem.
 
 ```ts
-import { mantle } from 'mantle-viem/chains'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, http } from 'viem'
 
 const client = createPublicClient({
@@ -51,8 +51,8 @@ const client = createPublicClient({
 Now that you have a Client set up, you can extend it with Mantle Actions.
 
 ```ts
-import { publicActionsL2 } from 'mantle-viem' // [!code hl]
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL2 } from '@mantleio/viem' // [!code hl]
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, http } from 'viem'
 
 const client = createPublicClient({
@@ -66,8 +66,8 @@ const client = createPublicClient({
 Now that you have an Mantle Client set up, you can now interact with Mantle and consume [Actions](/actions/depositMNT)!
 
 ```tsx
-import { publicActionsL2 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL2 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, http, parseEther } from 'viem'
 
 const client = createPublicClient({

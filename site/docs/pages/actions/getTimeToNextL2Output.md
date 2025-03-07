@@ -12,7 +12,7 @@ Returns the time until the next L2 output (after a provided block number) is sub
 :::code-group
 
 ```ts [example.ts]
-import { mantle } from 'mantle-viem/chains'
+import { mantle } from '@mantleio/viem/chains'
 import { account, publicClientL1, publicClientL2 } from './config'
 
 const l2BlockNumber = publicClientL2.getBlockNumber()
@@ -28,8 +28,8 @@ const { // [!code hl]
 ```
 
 ```ts [config.ts]
-import { publicActionsL1 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { publicActionsL1 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, custom, http } from 'viem'
 import { mainnet } from 'viem/chains'
 

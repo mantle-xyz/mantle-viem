@@ -23,8 +23,8 @@
 
 ```ts
 // import modules
-import { walletActionsL1 } from 'mantle-viem'
-import { mantle } from 'mantle-viem/chains'
+import { walletActionsL1 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
 import { createWalletClient, custom } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { mainnet } from 'viem/chains'
