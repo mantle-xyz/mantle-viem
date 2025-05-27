@@ -10,7 +10,7 @@ type ParseWithdrawRequestReturnType = {
 	args: WithdrawArgs;
 };
 
-export const parseInitWithdrawequest = ({
+export const parseInitWithdrawRequest = ({
 	type,
 	l2Token,
 	amount,
