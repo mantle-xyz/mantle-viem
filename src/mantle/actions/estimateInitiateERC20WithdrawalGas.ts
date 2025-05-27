@@ -15,7 +15,7 @@ import { contracts } from "../contracts.js";
 import type { ErrorType } from "../errors/utils.js";
 import type { GetAccountParameter } from "../types/account.js";
 import type { InitiateERC20WithdrawalRequest } from "../types/withdrawal.js";
-import { parseInitWithdrawequest } from "../utils/parseInitWithdrawRequest.js";
+import { parseInitWithdrawRequest } from "../utils/parseInitWithdrawRequest.js";
 
 export type EstimateInitiateWithdrawalERC20GasParameters<
 	chain extends Chain | undefined = Chain | undefined,
@@ -77,7 +77,7 @@ export async function estimateInitiateERC20Withdrawal<
 		request: { amount, l2Token, to },
 	} = parameters;
 
-	const { functionName, args } = parseInitWithdrawequest({
+	const { functionName, args } = parseInitWithdrawRequest({
 		type: "erc20",
 		l2Token,
 		amount,

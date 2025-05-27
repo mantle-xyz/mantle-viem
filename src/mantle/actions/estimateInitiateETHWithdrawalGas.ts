@@ -15,7 +15,7 @@ import { contracts } from "../contracts.js";
 import type { ErrorType } from "../errors/utils.js";
 import type { GetAccountParameter } from "../types/account.js";
 import type { InitiateETHWithdrawalRequest } from "../types/withdrawal.js";
-import { parseInitWithdrawequest } from "../utils/parseInitWithdrawRequest.js";
+import { parseInitWithdrawRequest } from "../utils/parseInitWithdrawRequest.js";
 
 export type EstimateInitiateETHWithdrawalGasParameters<
 	chain extends Chain | undefined = Chain | undefined,
@@ -77,7 +77,7 @@ export async function estimateInitiateETHWithdrawalGas<
 		request: { amount, to },
 	} = parameters;
 
-	const { functionName, args } = parseInitWithdrawequest({
+	const { functionName, args } = parseInitWithdrawRequest({
 		type: "eth",
 		amount,
 		to,
