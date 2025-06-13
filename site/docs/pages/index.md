@@ -16,15 +16,15 @@ mantle-viem is a TypeScript extension for [Viem](https://viem.sh) that provides 
 :::code-group
 
 ```bash [npm]
-npm i mantle-viem
+npm i @mantleio/viem
 ```
 
 ```bash [pnpm]
-pnpm i mantle-viem
+pnpm i @mantleio/viem
 ```
 
 ```bash [bun]
-bun i mantle-viem
+bun i @mantleio/viem
 ```
 
 :::
