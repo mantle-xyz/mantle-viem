@@ -22,6 +22,11 @@ import {
 	type EstimateInitiateMNTWithdrawalGasParameters,
 	type EstimateInitiateMNTWithdrawalGasReturnType,
 } from "../actions/estimateInitiateMNTWithdrawalGas.js";
+import {
+	estimateTotalFee,
+	type EstimateTotalFeeParameters,
+	type EstimateTotalFeeReturnType,
+} from "../actions/estimateTotalFee.js";
 
 export type PublicActionsL2<
 	chain extends Chain | undefined = Chain | undefined,
@@ -45,6 +50,33 @@ export type PublicActionsL2<
 			accountOverride
 		>
 	>;
+
+	/**
+	 * Estimates the L1 data fee + L2 fee to execute an L2 transaction.
+	 *
+	 * @param client - Client to use
+	 * @param parameters - {@link EstimateTotalFeeParameters}
+	 * @returns The gas estimate. {@link EstimateTotalFeeReturnType}
+	 *
+	 * @example
+	 * import { createPublicClient, http, parseEther } from 'viem'
+	 * import { optimism } from 'viem/chains'
+	 * import { publicActionsL2 } from 'viem/op-stack'
+	 *
+	 * const client = createPublicClient({
+	 *   chain: optimism,
+	 *   transport: http(),
+	 * }).extend(publicActionsL2())
+	 *
+	 * const totalFee = await client.estimateTotalFee({
+	 *   account: '0xA0Cf798816D4b9b9866b5330EEa46a18382f251e',
+	 *   to: '0x70997970c51812dc3a010c7d01b50e0d17dc79c8',
+	 *   value: parseEther('1'),
+	 * })
+	 */
+	estimateTotalFee: <chainOverride extends Chain | undefined = undefined>(
+		parameters: EstimateTotalFeeParameters<chain, account, chainOverride>,
+	) => Promise<EstimateTotalFeeReturnType>;
 
 	estimateInitiateMNTWithdrawalGas: <
 		chainOverride extends Chain | undefined = undefined,
@@ -87,6 +119,7 @@ export function publicActionsL2() {
 			buildProveWithdrawal: (args) => buildProveWithdrawal(client, args),
 			estimateInitiateMNTWithdrawalGas: (args) =>
 				estimateInitiateMNTWithdrawalGas(client, args),
+			estimateTotalFee: (args) => estimateTotalFee(client, args),
 			estimateInitiateETHWithdrawalGas: (args) =>
 				estimateInitiateETHWithdrawalGas(client, args),
 			estimateInitiateERC20Withdrawal: (args) =>
