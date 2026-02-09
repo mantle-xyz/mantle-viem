@@ -72,7 +72,6 @@ export async function estimateTotalFee<
 			: account.address
 		: undefined;
 
-	// 构造 RPC 调用参数
 	const callParams: Record<string, any> = {
 		from: accountAddress,
 		to,
@@ -91,14 +90,12 @@ export async function estimateTotalFee<
 		...rest,
 	};
 
-	// 移除 undefined 值
 	for (const key in callParams) {
 		if (callParams[key] === undefined) {
 			delete callParams[key];
 		}
 	}
 
-	// 调用 eth_estimateTotalFee RPC 方法
 	const result = await client.request({
 		method: "eth_estimateTotalFee" as any,
 		params: [callParams] as any,
