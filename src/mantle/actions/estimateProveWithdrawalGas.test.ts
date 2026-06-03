@@ -35,8 +35,6 @@ test("default", async () => {
 		output,
 		withdrawal: withdrawal!,
 	});
-	expect(request).toEqual(mantleSepoliaClient.chain);
-
 	const { targetChain } = request;
 	expect(targetChain).toEqual(mantleSepoliaClient.chain);
 

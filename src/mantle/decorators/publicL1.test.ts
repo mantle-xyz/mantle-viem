@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import { createPublicClient, http, parseEther } from "viem";
+import { anvilSepolia } from "~test/src/anvil.js";
 import { accounts } from "~test/src/constants.js";
 import { sepoliaClient } from "~test/src/utils.js";
 import { mantleSepoliaTestnet } from "../chains/index.js";
@@ -36,7 +37,13 @@ test("default", async () => {
 
 describe("smoke test", () => {
 	test("estimateDepositETHGas", async () => {
-		const gas = await client.estimateDepositETHGas({
+		// Estimate against the local anvil fork (not live Sepolia): the deposit
+		// carries `value`, and on the live network `accounts[0]` holds no ETH and
+		// now carries an EIP-7702 delegation (its private key is public), which
+		// trips the bridge's `onlyEOA` check. On the fork (pre-Pectra block) the
+		// account is funded by anvil and has no code.
+		const forkClient = anvilSepolia.getClient().extend(publicActionsL1());
+		const gas = await forkClient.estimateDepositETHGas({
 			account: accounts[0].address,
 			request: {
 				amount: parseEther("0.001"),

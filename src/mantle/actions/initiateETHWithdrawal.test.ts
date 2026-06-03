@@ -1,20 +1,20 @@
 import { createClient, http, parseEther } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import {
-	getTransactionReceipt,
-	mine,
+	// getTransactionReceipt,
+	// mine,
 	waitForTransactionReceipt,
 } from "viem/actions";
 import { sepolia } from "viem/chains";
-import { describe, expect, test } from "vitest";
-import { anvilMantleSepolia } from "~test/src/anvil.js";
+import { describe, /* expect, */ test } from "vitest";
+// import { anvilMantleSepolia } from "~test/src/anvil.js";
 import { accounts } from "~test/src/constants.js";
 import { mantleSepoliaTestnet } from "../chains/mantleSepoliaTestnet.js";
-import { extractWithdrawalMessageLogs } from "../utils/extractWithdrawalMessageLogs.js";
+// import { extractWithdrawalMessageLogs } from "../utils/extractWithdrawalMessageLogs.js";
 import { estimateInitiateETHWithdrawalGas } from "./estimateInitiateETHWithdrawalGas.js";
 import { getTimeToProve } from "./getTimeToProve.js";
 import { initiateETHWithdrawal } from "./initiateETHWithdrawal.js";
-import { waitToProve } from "./waitToProve.js";
+// import { waitToProve } from "./waitToProve.js";
 
 describe("e2e", () => {
 	const account = privateKeyToAccount(
