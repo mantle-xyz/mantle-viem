@@ -24,13 +24,13 @@ const fee = await publicClientL2.estimateInitiateMNTWithdrawalFee({
 ```
 
 ```ts [config.ts]
-import { createPublicClient, http } from 'viem'
-import { mantle } from '@mantleio/viem/chains'
 import { publicActionsL2 } from '@mantleio/viem'
+import { mantle } from '@mantleio/viem/chains'
+import { createPublicClient, http } from 'viem'
 
 export const publicClientL2 = createPublicClient({
   chain: mantle,
-  transport: http()
+  transport: http(),
 }).extend(publicActionsL2())
 
 export const account = '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266'
