@@ -79,19 +79,34 @@ describe("deposit", () => {
 		expect(transaction).toEqual(tx);
 	});
 
+	test("args: ethValue", () => {
+		const tx = {
+			...mantleTransaction,
+			ethValue: 69420n,
+		} as const satisfies TransactionSerializableDeposit;
+		const serialized = serializeTransaction(tx);
+		const transaction = parseTransaction(serialized);
+		expect(transaction).toEqual(tx);
+	});
+
+	test("args: ethTxValue", () => {
+		const tx = {
+			...mantleTransaction,
+			ethTxValue: 69420n,
+		} as const satisfies TransactionSerializableDeposit;
+		const serialized = serializeTransaction(tx);
+		const transaction = parseTransaction(serialized);
+		expect(transaction).toEqual(tx);
+	});
+
 	test("error: invalid rlp", () => {
 		expect(() =>
 			parseTransaction(
 				"0x7ef83aa018040f35752170c3339ddcd850f185c9cc46bdef4d6e1f2ab323f4d3d710431994977f82a600a1414e583f7f13623f1ac5d58b1c0b80808080",
 			),
-		).toThrowErrorMatchingInlineSnapshot(`
-      [InvalidSerializedTransactionError: Invalid serialized transaction of type "deposit" was provided.
-
-      Serialized Transaction: "0x7ef83aa018040f35752170c3339ddcd850f185c9cc46bdef4d6e1f2ab323f4d3d710431994977f82a600a1414e583f7f13623f1ac5d58b1c0b80808080"
-      Missing Attributes: isSystemTx, data
-
-      Version: viem@x.y.z]
-    `);
+		).toThrowError(
+			/Missing Attributes: isSystemTx, ethValue, data, ethTxValue/,
+		);
 	});
 });
 

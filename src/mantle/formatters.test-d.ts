@@ -21,6 +21,12 @@ describe("transaction", () => {
 		ReturnType<typeof formatters.transaction.format>["mint"]
 	>().toEqualTypeOf<bigint | undefined>();
 	expectTypeOf<
+		ReturnType<typeof formatters.transaction.format>["ethValue"]
+	>().toEqualTypeOf<bigint | undefined>();
+	expectTypeOf<
+		ReturnType<typeof formatters.transaction.format>["ethTxValue"]
+	>().toEqualTypeOf<bigint | undefined>();
+	expectTypeOf<
 		ReturnType<typeof formatters.transaction.format>["isSystemTx"]
 	>().toEqualTypeOf<boolean | undefined>();
 });
@@ -78,6 +84,12 @@ describe("smoke", () => {
 			transaction.type === "deposit" && transaction.mint,
 		).toEqualTypeOf<false | undefined | bigint>();
 		expectTypeOf(
+			transaction.type === "deposit" && transaction.ethValue,
+		).toEqualTypeOf<false | undefined | bigint>();
+		expectTypeOf(
+			transaction.type === "deposit" && transaction.ethTxValue,
+		).toEqualTypeOf<false | undefined | bigint>();
+		expectTypeOf(
 			transaction.type === "eip1559" && transaction.isSystemTx,
 		).toEqualTypeOf<false | undefined>();
 		expectTypeOf(
@@ -85,6 +97,12 @@ describe("smoke", () => {
 		).toEqualTypeOf<false | undefined>();
 		expectTypeOf(
 			transaction.type === "eip1559" && transaction.mint,
+		).toEqualTypeOf<false | undefined>();
+		expectTypeOf(
+			transaction.type === "eip1559" && transaction.ethValue,
+		).toEqualTypeOf<false | undefined>();
+		expectTypeOf(
+			transaction.type === "eip1559" && transaction.ethTxValue,
 		).toEqualTypeOf<false | undefined>();
 	});
 

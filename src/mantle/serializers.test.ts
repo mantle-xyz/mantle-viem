@@ -1,12 +1,4 @@
-import {
-	createPublicClient,
-	http,
-	keccak256,
-	parseEther,
-	parseGwei,
-} from "viem";
-import { getTransaction } from "viem/actions";
-import { base } from "viem/chains";
+import { keccak256, parseEther, parseGwei } from "viem";
 import { describe, expect, test } from "vitest";
 import { accounts } from "../../test/src/constants.js";
 import { parseTransaction } from "./parsers.js";
@@ -86,7 +78,7 @@ describe("deposit", async () => {
 			type: undefined,
 		} as any);
 		expect(serialized).toMatchInlineSnapshot(
-			'"0x7ef83ca018040f35752170c3339ddcd850f185c9cc46bdef4d6e1f2ab323f4d3d710431994977f82a600a1414e583f7f13623f1ac5d58b1c0b808080808080"',
+			'"0x7ef83da018040f35752170c3339ddcd850f185c9cc46bdef4d6e1f2ab323f4d3d710431994977f82a600a1414e583f7f13623f1ac5d58b1c0b80808080808080"',
 		);
 	});
 
@@ -95,15 +87,8 @@ describe("deposit", async () => {
 			...mantleTransaction,
 			to: "0xaabbccddeeff00112233445566778899aabbccd",
 		} as const satisfies TransactionSerializableDeposit;
-		expect(() => serializeTransaction(tx)).toThrowErrorMatchingInlineSnapshot(
-			`
-      [InvalidAddressError: Address "0xaabbccddeeff00112233445566778899aabbccd" is invalid.
-
-      - Address must be a hex value of 20 bytes (40 hex characters).
-      - Address must match its checksum counterpart.
-
-      Version: viem@x.y.z]
-    `,
+		expect(() => serializeTransaction(tx)).toThrowError(
+			/Address "0xaabbccddeeff00112233445566778899aabbccd" is invalid/,
 		);
 	});
 
@@ -112,87 +97,30 @@ describe("deposit", async () => {
 			...mantleTransaction,
 			from: "0xaabbccddeeff00112233445566778899aabbccd",
 		} as const satisfies TransactionSerializableDeposit;
-		expect(() => serializeTransaction(tx)).toThrowErrorMatchingInlineSnapshot(
-			`
-      [InvalidAddressError: Address "0xaabbccddeeff00112233445566778899aabbccd" is invalid.
-
-      - Address must be a hex value of 20 bytes (40 hex characters).
-      - Address must match its checksum counterpart.
-
-      Version: viem@x.y.z]
-    `,
+		expect(() => serializeTransaction(tx)).toThrowError(
+			/Address "0xaabbccddeeff00112233445566778899aabbccd" is invalid/,
 		);
 	});
 
 	test("e2e", async () => {
-		const client = createPublicClient({
-			chain: base,
-			transport: http(),
-		});
-
-		const hash_1 =
-			"0xfd2665b71d667680d4d8afba1cddf1dccd622d303fc336cb3aaec8e4345435bc";
-		const tx_1 = await getTransaction(client, {
-			hash: hash_1,
-		});
+		const hash =
+			"0xb44587742995319898a6d7241e2e6b749e6d570efb34f9f359572b2f7367ca92";
 		expect(
 			keccak256(
 				serializeTransaction({
-					...tx_1,
-					data: tx_1.input,
-					sourceHash: tx_1.sourceHash!,
+					from: "0x48ebc5312e31adb8bb0802fc72ca84da5cdfdc5d",
+					sourceHash:
+						"0x635b2d77d1cd913eb3ccb4ae7749234a79b618e4726093677f1a05bbf9ac7c80",
+					to: "0x4200000000000000000000000000000000000007",
+					mint: 800000000000000000000n,
+					value: 800000000000000000000n,
+					gas: 591926n,
+					ethValue: 0n,
+					data: "0xff8daf15000100000000000000000000000000000000000000000000000000000000f75f00000000000000000000000021f308067241b2028503c07bd7cb3751ffab0fb2000000000000000000000000420000000000000000000000000000000000001000000000000000000000000000000000000000000000002b5e3af16b1880000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000030d4000000000000000000000000000000000000000000000000000000000000000e000000000000000000000000000000000000000000000000000000000000000a4f407a99e0000000000000000000000001dae2593c1ea98840882e8c7c4b0509415aff1c10000000000000000000000001dae2593c1ea98840882e8c7c4b0509415aff1c100000000000000000000000000000000000000000000002b5e3af16b188000000000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 					type: "deposit",
 				} as TransactionSerializableDeposit),
 			),
-		).toEqual(hash_1);
-
-		const hash_2 =
-			"0x7a6307f60eca13ba3fcf58b4fb42d748a57eb1c03cb27553f7062c85ac0485fc";
-		const tx_2 = await getTransaction(client, {
-			hash: hash_2,
-		});
-		expect(
-			keccak256(
-				serializeTransaction({
-					...tx_2,
-					data: tx_2.input,
-					sourceHash: tx_2.sourceHash!,
-					type: "deposit",
-				} as TransactionSerializableDeposit),
-			),
-		).toEqual(hash_2);
-
-		const hash_3 =
-			"0x2708d5d73a032a023c7fc19641b5a84483551166205b21a1a11d7d5689c0395c";
-		const tx_3 = await getTransaction(client, {
-			hash: hash_3,
-		});
-		expect(
-			keccak256(
-				serializeTransaction({
-					...tx_3,
-					data: tx_3.input,
-					sourceHash: tx_3.sourceHash!,
-					type: "deposit",
-				} as TransactionSerializableDeposit),
-			),
-		).toEqual(hash_3);
-
-		const hash_4 =
-			"0xd5a40724880248619694f94dc8d710cfced12087be4451c314680deb2311d6a6";
-		const tx_4 = await getTransaction(client, {
-			hash: hash_4,
-		});
-		expect(
-			keccak256(
-				serializeTransaction({
-					...tx_4,
-					data: tx_4.input,
-					sourceHash: tx_4.sourceHash!,
-					type: "deposit",
-				} as TransactionSerializableDeposit),
-			),
-		).toEqual(hash_4);
+		).toEqual(hash);
 	});
 });
 

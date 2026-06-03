@@ -56,10 +56,24 @@ function parseTransactionDeposit(
 ): ParseTransactionReturnType<TransactionSerializedDeposit> {
 	const transactionArray = toTransactionArray(serializedTransaction);
 
-	const [sourceHash, from, to, mint, value, gas, isSystemTx, data] =
-		transactionArray;
+	const [
+		sourceHash,
+		from,
+		to,
+		mint,
+		value,
+		gas,
+		isSystemTx,
+		ethValue,
+		data,
+		ethTxValue,
+	] = transactionArray;
 
-	if (transactionArray.length !== 8 || !isHex(sourceHash) || !isHex(from)) {
+	if (
+		(transactionArray.length !== 9 && transactionArray.length !== 10) ||
+		!isHex(sourceHash) ||
+		!isHex(from)
+	) {
 		throw new InvalidSerializedTransactionError({
 			attributes: {
 				sourceHash,
@@ -69,7 +83,9 @@ function parseTransactionDeposit(
 				mint,
 				value,
 				isSystemTx,
+				ethValue,
 				data,
+				ethTxValue,
 			},
 			serializedTransaction,
 			type: "deposit",
@@ -89,7 +105,13 @@ function parseTransactionDeposit(
 	if (isHex(isSystemTx) && isSystemTx !== "0x") {
 		transaction.isSystemTx = hexToBool(isSystemTx);
 	}
+	if (isHex(ethValue) && ethValue !== "0x") {
+		transaction.ethValue = hexToBigInt(ethValue);
+	}
 	if (isHex(data) && data !== "0x") transaction.data = data;
+	if (isHex(ethTxValue) && ethTxValue !== "0x") {
+		transaction.ethTxValue = hexToBigInt(ethTxValue);
+	}
 
 	assertTransactionDeposit(transaction);
 
