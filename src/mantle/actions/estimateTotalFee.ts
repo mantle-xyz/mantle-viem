@@ -23,8 +23,7 @@ export type EstimateTotalFeeParameters<
 	chain extends Chain | undefined = Chain | undefined,
 	account extends Account | undefined = Account | undefined,
 	chainOverride extends Chain | undefined = Chain | undefined,
-> = UnionEvaluate<UnionOmit<FormattedTransactionRequest, "from">> &
-	// `required: false` — the node accepts a request without `from`, so account
+> = UnionEvaluate<UnionOmit<FormattedTransactionRequest, "from">> & // `required: false` — the node accepts a request without `from`, so account
 	// is optional (matches the runtime behavior of `eth_estimateTotalFee`).
 	GetAccountParameter<account, Account | Address, false> &
 	GetChainParameter<chain, chainOverride>;
