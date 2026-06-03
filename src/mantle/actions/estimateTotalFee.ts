@@ -1,33 +1,46 @@
-import type { Address } from "viem";
-import type { Client } from "viem";
-import type { Transport } from "viem";
-import type { Account } from "viem";
-import type { Chain } from "viem";
-import type { UnionEvaluate, UnionOmit } from "viem";
+import type {
+	Account,
+	Address,
+	Chain,
+	Client,
+	GetChainParameter,
+	Hex,
+	RpcTransactionRequest,
+	Transport,
+	UnionEvaluate,
+	UnionOmit,
+} from "viem";
 import { hexToBigInt } from "viem";
-import type { FormattedTransactionRequest } from "viem/utils";
+import {
+	type FormattedTransactionRequest,
+	formatTransactionRequest,
+	parseAccount,
+} from "viem/utils";
 import type { ErrorType } from "../errors/utils.js";
+import type { GetAccountParameter } from "../types/account.js";
 
 export type EstimateTotalFeeParameters<
-	_chain extends Chain | undefined = Chain | undefined,
+	chain extends Chain | undefined = Chain | undefined,
 	account extends Account | undefined = Account | undefined,
 	chainOverride extends Chain | undefined = Chain | undefined,
-> = UnionEvaluate<UnionOmit<FormattedTransactionRequest, "from">> & {
-	account?: account | Address | undefined;
-	chain?: chainOverride | Chain | null | undefined;
-	[key: string]: any;
-};
+> = UnionEvaluate<UnionOmit<FormattedTransactionRequest, "from">> &
+	// `required: false` — the node accepts a request without `from`, so account
+	// is optional (matches the runtime behavior of `eth_estimateTotalFee`).
+	GetAccountParameter<account, Account | Address, false> &
+	GetChainParameter<chain, chainOverride>;
 
 export type EstimateTotalFeeReturnType = bigint;
 
 export type EstimateTotalFeeErrorType = ErrorType;
 
 /**
- * Estimates the L1 data fee + L2 fee + operator fee to execute an L2 transaction.
+ * Estimates the total fee (L1 data fee + L2 execution fee + operator fee)
+ * required to execute an L2 transaction, as computed by Mantle's
+ * `eth_estimateTotalFee` RPC method.
  *
  * @param client - Client to use
  * @param parameters - {@link EstimateTotalFeeParameters}
- * @returns The fee (in wei). {@link EstimateTotalFeeReturnType}
+ * @returns The total fee (in wei). {@link EstimateTotalFeeReturnType}
  *
  * @example
  * import { createPublicClient, http, parseEther } from 'viem'
@@ -52,54 +65,26 @@ export async function estimateTotalFee<
 	client: Client<Transport, chain, account>,
 	args: EstimateTotalFeeParameters<chain, account, chainOverride>,
 ): Promise<EstimateTotalFeeReturnType> {
-	const {
-		account = client.account,
-		accessList,
-		data,
-		gas,
-		gasPrice,
-		maxFeePerGas,
-		maxPriorityFeePerGas,
-		nonce,
-		to,
-		value,
-		...rest
-	} = args;
+	const { account: account_ = client.account, ...rest } = args;
 
-	const accountAddress = account
-		? typeof account === "string"
-			? account
-			: account.address
-		: undefined;
+	const account = account_ ? parseAccount(account_) : undefined;
 
-	const callParams: Record<string, any> = {
-		from: accountAddress,
-		to,
-		data,
-		value: value !== undefined ? `0x${value.toString(16)}` : undefined,
-		gas: gas !== undefined ? `0x${gas.toString(16)}` : undefined,
-		gasPrice: gasPrice !== undefined ? `0x${gasPrice.toString(16)}` : undefined,
-		maxFeePerGas:
-			maxFeePerGas !== undefined ? `0x${maxFeePerGas.toString(16)}` : undefined,
-		maxPriorityFeePerGas:
-			maxPriorityFeePerGas !== undefined
-				? `0x${maxPriorityFeePerGas.toString(16)}`
-				: undefined,
-		nonce: nonce !== undefined ? `0x${nonce.toString(16)}` : undefined,
-		accessList,
+	// `formatTransactionRequest` only copies known transaction fields (hex-encoding
+	// the numeric ones) and drops everything else — so client-only overrides such as
+	// `chain` never leak into the RPC call object.
+	const request = formatTransactionRequest({
 		...rest,
-	};
-
-	for (const key in callParams) {
-		if (callParams[key] === undefined) {
-			delete callParams[key];
-		}
-	}
-
-	const result = await client.request({
-		method: "eth_estimateTotalFee" as any,
-		params: [callParams] as any,
+		from: account?.address,
 	});
 
-	return hexToBigInt(result as `0x${string}`);
+	const result = await client.request<{
+		Method: "eth_estimateTotalFee";
+		Parameters: [RpcTransactionRequest];
+		ReturnType: Hex;
+	}>({
+		method: "eth_estimateTotalFee",
+		params: [request],
+	});
+
+	return hexToBigInt(result);
 }

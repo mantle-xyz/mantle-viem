@@ -23,6 +23,21 @@ import {
 	type EstimateInitiateMNTWithdrawalGasReturnType,
 } from "../actions/estimateInitiateMNTWithdrawalGas.js";
 import {
+	estimateInitiateERC20WithdrawalFee,
+	type EstimateInitiateERC20WithdrawalFeeParameters,
+	type EstimateInitiateERC20WithdrawalFeeReturnType,
+} from "../actions/estimateInitiateERC20WithdrawalFee.js";
+import {
+	estimateInitiateETHWithdrawalFee,
+	type EstimateInitiateETHWithdrawalFeeParameters,
+	type EstimateInitiateETHWithdrawalFeeReturnType,
+} from "../actions/estimateInitiateETHWithdrawalFee.js";
+import {
+	estimateInitiateMNTWithdrawalFee,
+	type EstimateInitiateMNTWithdrawalFeeParameters,
+	type EstimateInitiateMNTWithdrawalFeeReturnType,
+} from "../actions/estimateInitiateMNTWithdrawalFee.js";
+import {
 	estimateTotalFee,
 	type EstimateTotalFeeParameters,
 	type EstimateTotalFeeReturnType,
@@ -52,19 +67,18 @@ export type PublicActionsL2<
 	>;
 
 	/**
-	 * Estimates the L1 data fee + L2 fee to execute an L2 transaction.
+	 * Estimates the total fee (L1 data fee + L2 execution fee + operator fee) to execute an L2 transaction.
 	 *
-	 * @param client - Client to use
 	 * @param parameters - {@link EstimateTotalFeeParameters}
-	 * @returns The gas estimate. {@link EstimateTotalFeeReturnType}
+	 * @returns The total fee (in wei). {@link EstimateTotalFeeReturnType}
 	 *
 	 * @example
 	 * import { createPublicClient, http, parseEther } from 'viem'
-	 * import { optimism } from 'viem/chains'
-	 * import { publicActionsL2 } from 'viem/op-stack'
+	 * import { mantle } from '@mantleio/viem/chains'
+	 * import { publicActionsL2 } from '@mantleio/viem'
 	 *
 	 * const client = createPublicClient({
-	 *   chain: optimism,
+	 *   chain: mantle,
 	 *   transport: http(),
 	 * }).extend(publicActionsL2())
 	 *
@@ -105,6 +119,34 @@ export type PublicActionsL2<
 			chainOverride
 		>,
 	) => Promise<EstimateInitiateERC20WithdrawalGasReturnType>;
+
+	estimateInitiateMNTWithdrawalFee: <
+		chainOverride extends Chain | undefined = undefined,
+	>(
+		parameters: EstimateInitiateMNTWithdrawalFeeParameters<
+			chain,
+			account,
+			chainOverride
+		>,
+	) => Promise<EstimateInitiateMNTWithdrawalFeeReturnType>;
+	estimateInitiateETHWithdrawalFee: <
+		chainOverride extends Chain | undefined = undefined,
+	>(
+		parameters: EstimateInitiateETHWithdrawalFeeParameters<
+			chain,
+			account,
+			chainOverride
+		>,
+	) => Promise<EstimateInitiateETHWithdrawalFeeReturnType>;
+	estimateInitiateERC20WithdrawalFee: <
+		chainOverride extends Chain | undefined = undefined,
+	>(
+		parameters: EstimateInitiateERC20WithdrawalFeeParameters<
+			chain,
+			account,
+			chainOverride
+		>,
+	) => Promise<EstimateInitiateERC20WithdrawalFeeReturnType>;
 };
 
 export function publicActionsL2() {
@@ -124,6 +166,12 @@ export function publicActionsL2() {
 				estimateInitiateETHWithdrawalGas(client, args),
 			estimateInitiateERC20Withdrawal: (args) =>
 				estimateInitiateERC20Withdrawal(client, args),
+			estimateInitiateMNTWithdrawalFee: (args) =>
+				estimateInitiateMNTWithdrawalFee(client, args),
+			estimateInitiateETHWithdrawalFee: (args) =>
+				estimateInitiateETHWithdrawalFee(client, args),
+			estimateInitiateERC20WithdrawalFee: (args) =>
+				estimateInitiateERC20WithdrawalFee(client, args),
 		};
 	};
 }

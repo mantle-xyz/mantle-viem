@@ -199,6 +199,12 @@ function defineAnvil<const chain extends Chain>(
 						];
 					}
 
+					if (method === "eth_estimateTotalFee") {
+						// anvil does not implement Mantle's custom `eth_estimateTotalFee`
+						// RPC method, so stub a deterministic fee (in wei) for tests.
+						return "0x4e76c6682f866";
+					}
+
 					return request({ method, params }, opts);
 				},
 				value,
