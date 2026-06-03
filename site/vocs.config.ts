@@ -59,6 +59,22 @@ export default defineConfig({
 					text: "buildProveWithdrawal",
 					link: "/actions/buildProveWithdrawal",
 				},
+				{
+					text: "estimateTotalFee",
+					link: "/actions/estimateTotalFee",
+				},
+				{
+					text: "estimateInitiateMNTWithdrawalFee",
+					link: "/actions/estimateInitiateMNTWithdrawalFee",
+				},
+				{
+					text: "estimateInitiateETHWithdrawalFee",
+					link: "/actions/estimateInitiateETHWithdrawalFee",
+				},
+				{
+					text: "estimateInitiateERC20WithdrawalFee",
+					link: "/actions/estimateInitiateERC20WithdrawalFee",
+				},
 			],
 		},
 		{
