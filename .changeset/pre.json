@@ -1,0 +1,12 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "@mantleio/viem": "0.0.1-alpha.1",
+    "site": "0.0.0"
+  },
+  "changesets": [
+    "add-withdrawal-fee-estimators",
+    "fix-deposit-eth-value-fields"
+  ]
+}

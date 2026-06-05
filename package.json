@@ -1,6 +1,6 @@
 {
 	"name": "@mantleio/viem",
-	"version": "0.0.1-alpha.1",
+	"version": "0.1.0-alpha.2",
 	"type": "module",
 	"main": "./dist/cjs/index.js",
 	"module": "./dist/esm/index.js",
@@ -42,9 +42,15 @@
 	},
 	"typesVersions": {
 		"*": {
-			"actions": ["./dist/types/actions/index.d.ts"],
-			"chains": ["./dist/types/chains/index.d.ts"],
-			"utils": ["./dist/types/utils/index.d.ts"]
+			"actions": [
+				"./dist/types/actions/index.d.ts"
+			],
+			"chains": [
+				"./dist/types/chains/index.d.ts"
+			],
+			"utils": [
+				"./dist/types/utils/index.d.ts"
+			]
 		}
 	},
 	"devDependencies": {
