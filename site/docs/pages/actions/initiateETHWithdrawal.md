@@ -20,10 +20,10 @@ import { account, walletClientL2 } from './config'
 // User might need to update allowance for first time deposit.
 const approvalHash = await walletClientL2.writeContract({
   account,
-  address: "0xdeaddeaddeaddeaddeaddeaddeaddeaddead1111", //L2 ETH
-  abi:erc20Abi,
-  functionName:'approve',
-  args:[mantle.contracts.l2StandardBridge.address,parseEther('1')]
+  address: '0xdeaddeaddeaddeaddeaddeaddeaddeaddead1111', // L2 ETH
+  abi: erc20Abi,
+  functionName: 'approve',
+  args: [mantle.contracts.l2StandardBridge.address, parseEther('1')],
 })
 
 const hash = await walletClientL2.initiateETHWithdrawal({

@@ -19,6 +19,8 @@ import type { OneOf } from "viem";
 
 type RpcTransaction<pending extends boolean = boolean> =
 	RpcTransaction_<pending> & {
+		ethValue?: undefined;
+		ethTxValue?: undefined;
 		isSystemTx?: undefined;
 		mint?: undefined;
 		sourceHash?: undefined;
@@ -27,6 +29,8 @@ type RpcTransaction<pending extends boolean = boolean> =
 export type OpStackRpcDepositTransaction<pending extends boolean = boolean> =
 	Omit<TransactionBase<Quantity, Index, pending>, "typeHex"> &
 		FeeValuesEIP1559<Quantity> & {
+			ethValue?: Hex | undefined;
+			ethTxValue?: Hex | undefined;
 			isSystemTx?: boolean | undefined;
 			mint?: Hex | undefined;
 			sourceHash: Hex;
@@ -50,6 +54,8 @@ type Transaction<pending extends boolean = boolean> = Transaction_<
 	number,
 	pending
 > & {
+	ethValue?: undefined;
+	ethTxValue?: undefined;
 	isSystemTx?: undefined;
 	mint?: undefined;
 	sourceHash?: undefined;
@@ -58,6 +64,8 @@ type Transaction<pending extends boolean = boolean> = Transaction_<
 export type OpStackDepositTransaction<pending extends boolean = boolean> =
 	TransactionBase<bigint, number, pending> &
 		FeeValuesEIP1559 & {
+			ethValue?: bigint | undefined;
+			ethTxValue?: bigint | undefined;
 			isSystemTx?: boolean;
 			mint?: bigint | undefined;
 			sourceHash: Hex;

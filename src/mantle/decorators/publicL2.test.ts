@@ -13,8 +13,12 @@ test("default", async () => {
 		{
 		  "buildProveWithdrawal": [Function],
 		  "estimateInitiateERC20Withdrawal": [Function],
+		  "estimateInitiateERC20WithdrawalFee": [Function],
+		  "estimateInitiateETHWithdrawalFee": [Function],
 		  "estimateInitiateETHWithdrawalGas": [Function],
+		  "estimateInitiateMNTWithdrawalFee": [Function],
 		  "estimateInitiateMNTWithdrawalGas": [Function],
+		  "estimateTotalFee": [Function],
 		}
 	`);
 });

@@ -174,7 +174,11 @@ const hash = await walletClientL1.proveWithdrawal(args)
 ```
 
 ```ts [config.ts (JSON-RPC Account)]
-import { publicActionsL1, publicActionsL2, walletActionsL1 } from '@mantleio/viem'
+import {
+  publicActionsL1,
+  publicActionsL2,
+  walletActionsL1,
+} from '@mantleio/viem'
 import { mantle } from '@mantleio/viem/chains'
 import { createPublicClient, createWalletClient, custom, http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'

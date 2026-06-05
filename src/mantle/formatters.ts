@@ -25,6 +25,12 @@ export const formatters = {
 				) as OpStackTransaction;
 				if (formatted.typeHex === "0x7e") {
 					formatted.isSystemTx = transaction.isSystemTx;
+					if (transaction.ethValue !== undefined) {
+						formatted.ethValue = hexToBigInt(transaction.ethValue);
+					}
+					if (transaction.ethTxValue !== undefined) {
+						formatted.ethTxValue = hexToBigInt(transaction.ethTxValue);
+					}
 					formatted.mint = transaction.mint
 						? hexToBigInt(transaction.mint)
 						: undefined;
@@ -44,6 +50,12 @@ export const formatters = {
 			const transaction = {} as OpStackTransaction;
 			if (args.type === "0x7e") {
 				transaction.isSystemTx = args.isSystemTx;
+				if (args.ethValue !== undefined) {
+					transaction.ethValue = hexToBigInt(args.ethValue);
+				}
+				if (args.ethTxValue !== undefined) {
+					transaction.ethTxValue = hexToBigInt(args.ethTxValue);
+				}
 				transaction.mint = args.mint ? hexToBigInt(args.mint) : undefined;
 				transaction.sourceHash = args.sourceHash;
 				transaction.type = "deposit";

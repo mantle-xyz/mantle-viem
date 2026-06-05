@@ -7,6 +7,30 @@ export {
 } from "./actions/buildProveWithdrawal.js";
 
 export {
+	estimateInitiateERC20WithdrawalFee,
+	type EstimateInitiateERC20WithdrawalFeeErrorType,
+	type EstimateInitiateERC20WithdrawalFeeParameters,
+	type EstimateInitiateERC20WithdrawalFeeReturnType,
+} from "./actions/estimateInitiateERC20WithdrawalFee.js";
+export {
+	estimateInitiateETHWithdrawalFee,
+	type EstimateInitiateETHWithdrawalFeeErrorType,
+	type EstimateInitiateETHWithdrawalFeeParameters,
+	type EstimateInitiateETHWithdrawalFeeReturnType,
+} from "./actions/estimateInitiateETHWithdrawalFee.js";
+export {
+	estimateInitiateMNTWithdrawalFee,
+	type EstimateInitiateMNTWithdrawalFeeErrorType,
+	type EstimateInitiateMNTWithdrawalFeeParameters,
+	type EstimateInitiateMNTWithdrawalFeeReturnType,
+} from "./actions/estimateInitiateMNTWithdrawalFee.js";
+export {
+	estimateTotalFee,
+	type EstimateTotalFeeErrorType,
+	type EstimateTotalFeeParameters,
+	type EstimateTotalFeeReturnType,
+} from "./actions/estimateTotalFee.js";
+export {
 	finalizeWithdrawal,
 	type FinalizeWithdrawalErrorType,
 	type FinalizeWithdrawalParameters,

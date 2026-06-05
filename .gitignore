@@ -28,3 +28,4 @@ node_modules
 tsconfig*.tsbuildinfo
 *.tgz
 vitest.config.ts.timestamp*
+.gstack/

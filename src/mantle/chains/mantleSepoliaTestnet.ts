@@ -1,5 +1,5 @@
 import { defineChain } from "viem";
-import { chainConfig } from "viem/op-stack";
+import { chainConfig } from "../chainConfig.js";
 
 const sourceId = 11_155_111; // sepolia
 
