@@ -3,6 +3,7 @@ import { ContractFunctionRevertedError } from "viem";
 import type { Account } from "viem";
 import type { Chain, DeriveChain, GetChainParameter } from "viem";
 import type { ErrorType } from "../errors/utils.js";
+import { LatestL2OutputNotReadyError } from "../errors/withdrawal.js";
 import type { GetContractAddressParameter } from "../types/contract.js";
 import { poll } from "../utils/poll.js";
 import {
@@ -72,7 +73,13 @@ export async function waitForNextL2Output<
 					resolve(output);
 				} catch (e) {
 					const error = e as GetL2OutputErrorType;
-					if (!(error.cause instanceof ContractFunctionRevertedError)) {
+					// Keep polling while no committed output covers the block yet
+					// (latest strategy) or the oracle reverts (earliest strategy);
+					// bail on any other error.
+					if (
+						!(error instanceof LatestL2OutputNotReadyError) &&
+						!(error.cause instanceof ContractFunctionRevertedError)
+					) {
 						unpoll();
 						reject(e);
 					}

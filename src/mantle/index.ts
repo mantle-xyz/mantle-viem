@@ -1,4 +1,9 @@
-// biome-ignore lint/performance/noBarrelFile: entrypoint module
+export {
+	buildMigratedWithdrawal,
+	type BuildMigratedWithdrawalErrorType,
+	type BuildMigratedWithdrawalParameters,
+	type BuildMigratedWithdrawalReturnType,
+} from "./actions/buildMigratedWithdrawal.js";
 export {
 	buildProveWithdrawal,
 	type BuildProveWithdrawalErrorType,
@@ -41,6 +46,7 @@ export {
 	type GetL2OutputErrorType,
 	type GetL2OutputParameters,
 	type GetL2OutputReturnType,
+	type GetL2OutputStrategy,
 } from "./actions/getL2Output.js";
 export {
 	getPortalVersion,
@@ -96,6 +102,16 @@ export {
 	type WaitToProveParameters,
 	type WaitToProveReturnType,
 } from "./actions/waitToProve.js";
+export {
+	L1CrossDomainMessengerNotFoundError,
+	type L1CrossDomainMessengerNotFoundErrorType,
+	LatestL2OutputNotReadyError,
+	type LatestL2OutputNotReadyErrorType,
+	MultipleLegacyWithdrawalsError,
+	type MultipleLegacyWithdrawalsErrorType,
+	ReceiptContainsNoWithdrawalsError,
+	type ReceiptContainsNoWithdrawalsErrorType,
+} from "./errors/withdrawal.js";
 
 export { chainConfig } from "./chainConfig.js";
 

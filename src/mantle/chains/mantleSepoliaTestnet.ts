@@ -30,6 +30,11 @@ export const mantleSepoliaTestnet = /*#__PURE__*/ defineChain({
 				address: "0x4121dc8e48Bc6196795eb4867772A5e259fecE07",
 			},
 		},
+		l1CrossDomainMessenger: {
+			[sourceId]: {
+				address: "0x37dAC5312e31Adb8BB0802Fc72Ca84DA5cDfcb4c",
+			},
+		},
 		portal: {
 			[sourceId]: {
 				address: "0xB3db4bd5bc225930eD674494F9A4F6a11B8EFBc8",

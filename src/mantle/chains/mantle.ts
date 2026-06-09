@@ -30,6 +30,11 @@ export const mantle = /*#__PURE__*/ defineChain({
 				address: "0x31d543e7BE1dA6eFDc2206Ef7822879045B9f481",
 			},
 		},
+		l1CrossDomainMessenger: {
+			[sourceId]: {
+				address: "0x676A795fe6E43C17c668de16730c3F690FEB7120",
+			},
+		},
 		portal: {
 			[sourceId]: {
 				address: "0xc54cb22944F2bE476E02dECfCD7e3E7d3e15A8Fb",

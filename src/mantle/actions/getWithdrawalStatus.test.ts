@@ -1,5 +1,5 @@
 import { getTransactionReceipt, reset } from "viem/actions";
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 import { anvilMantleSepolia, anvilSepolia } from "~test/src/anvil.js";
 
 import { getWithdrawalStatus } from "./getWithdrawalStatus.js";
@@ -58,6 +58,13 @@ test("waiting-to-finalize", async () => {
 		jsonRpcUrl: anvilMantleSepolia.forkUrl,
 	});
 
+	// `getTimeToFinalize` is computed from `Date.now()` vs the on-chain prove
+	// timestamp (1725556872) against the 1h finalization window, so without a
+	// fixed clock this withdrawal eventually reads "ready-to-finalize" once real
+	// time passes the window. Freeze "now" to 60s after the prove (well within
+	// the window) to keep it deterministically "waiting-to-finalize".
+	vi.setSystemTime(new Date(1725556932000));
+
 	const receipt = await getTransactionReceipt(mantleSepoliaClient, {
 		hash: "0x0ced33e811485677bc0775bf430d9b3262bad3c630dc386883a4ac84a698b064",
 	});
@@ -67,6 +74,8 @@ test("waiting-to-finalize", async () => {
 		targetChain: mantleSepoliaClient.chain,
 	});
 	expect(status).toBe("waiting-to-finalize");
+
+	vi.useRealTimers();
 });
 
 test("ready-to-finalize", async () => {

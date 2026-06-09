@@ -3,6 +3,11 @@ import type { Client, Transport } from "viem";
 import type { Chain } from "viem";
 import type { Account } from "viem";
 import {
+	buildMigratedWithdrawal,
+	type BuildMigratedWithdrawalParameters,
+	type BuildMigratedWithdrawalReturnType,
+} from "../actions/buildMigratedWithdrawal.js";
+import {
 	buildProveWithdrawal,
 	type BuildProveWithdrawalParameters,
 	type BuildProveWithdrawalReturnType,
@@ -65,6 +70,18 @@ export type PublicActionsL2<
 			accountOverride
 		>
 	>;
+
+	/**
+	 * Reconstructs the Bedrock withdrawal for a pre-Tectonic (V1/OVM) withdrawal
+	 * that was migrated into the Bedrock `L2ToL1MessagePasser`, so it can be
+	 * proven with {@link buildProveWithdrawal}.
+	 *
+	 * @param parameters - {@link BuildMigratedWithdrawalParameters}
+	 * @returns The reconstructed withdrawal. {@link BuildMigratedWithdrawalReturnType}
+	 */
+	buildMigratedWithdrawal: (
+		parameters: BuildMigratedWithdrawalParameters,
+	) => Promise<BuildMigratedWithdrawalReturnType>;
 
 	/**
 	 * Estimates the total fee (L1 data fee + L2 execution fee + operator fee) to execute an L2 transaction.
@@ -158,6 +175,7 @@ export function publicActionsL2() {
 		client: Client<transport, chain, account>,
 	): PublicActionsL2<chain, account> => {
 		return {
+			buildMigratedWithdrawal: (args) => buildMigratedWithdrawal(client, args),
 			buildProveWithdrawal: (args) => buildProveWithdrawal(client, args),
 			estimateInitiateMNTWithdrawalGas: (args) =>
 				estimateInitiateMNTWithdrawalGas(client, args),

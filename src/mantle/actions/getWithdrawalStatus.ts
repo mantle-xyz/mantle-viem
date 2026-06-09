@@ -14,6 +14,7 @@ import type { TransactionReceipt } from "viem";
 import type { OneOf } from "viem";
 import { portal2Abi, portalAbi } from "../abis.js";
 import {
+	LatestL2OutputNotReadyError,
 	ReceiptContainsNoWithdrawalsError,
 	type ReceiptContainsNoWithdrawalsErrorType,
 } from "../errors/withdrawal.js";
@@ -134,9 +135,10 @@ export async function getWithdrawalStatus<
 		if (outputResult.status === "rejected") {
 			const error = outputResult.reason as GetL2OutputErrorType;
 			if (
-				error.cause instanceof ContractFunctionRevertedError &&
-				error.cause.data?.args?.[0] ===
-					"L2OutputOracle: cannot get output for a block that has not been proposed"
+				error instanceof LatestL2OutputNotReadyError ||
+				(error.cause instanceof ContractFunctionRevertedError &&
+					error.cause.data?.args?.[0] ===
+						"L2OutputOracle: cannot get output for a block that has not been proposed")
 			) {
 				return "waiting-to-prove";
 			}

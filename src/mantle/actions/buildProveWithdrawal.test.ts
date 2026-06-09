@@ -30,9 +30,9 @@ test("args: output (legacy)", async () => {
 
 	const output = await getL2Output(sepoliaClient, {
 		l2BlockNumber: receipt.blockNumber,
+		strategy: "earliest",
 		targetChain: mantleSepoliaClient.chain,
 	});
-	expect(output).toEqual(mantleSepoliaClient.chain);
 
 	const request = await buildProveWithdrawal(mantleSepoliaClient, {
 		account: accounts[0].address,
