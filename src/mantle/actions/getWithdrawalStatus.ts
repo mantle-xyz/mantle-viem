@@ -20,6 +20,7 @@ import {
 } from "../errors/withdrawal.js";
 import type { TargetChain } from "../types/chain.js";
 import type { GetContractAddressParameter } from "../types/contract.js";
+import type { Withdrawal } from "../types/withdrawal.js";
 import {
 	getWithdrawals,
 	type GetWithdrawalsErrorType,
@@ -48,6 +49,13 @@ export type GetWithdrawalStatusParameters<
 		GetContractAddressParameter<_derivedChain, "l2OutputOracle" | "portal">
 	> & {
 		receipt: TransactionReceipt;
+		/**
+		 * The withdrawal to check. Only required when `receipt` contains no
+		 * `MessagePassed` event — i.e. a migrated / pre-Tectonic withdrawal
+		 * reconstructed via `buildMigratedWithdrawal`. For normal withdrawals it
+		 * is parsed from the receipt and this can be omitted.
+		 */
+		withdrawal?: Withdrawal | undefined;
 	};
 export type GetWithdrawalStatusReturnType =
 	| "waiting-to-prove"
@@ -91,7 +99,11 @@ export async function getWithdrawalStatus<
 		return Object.values(targetChain.contracts.portal)[0].address;
 	})();
 
-	const [withdrawal] = getWithdrawals(receipt);
+	const [parsedWithdrawal] = getWithdrawals(receipt);
+	// Fall back to a caller-supplied withdrawal when the receipt has no
+	// `MessagePassed` event (migrated / pre-Tectonic withdrawals, reconstructed
+	// via `buildMigratedWithdrawal`).
+	const withdrawal = parsedWithdrawal ?? parameters.withdrawal;
 
 	if (!withdrawal) {
 		throw new ReceiptContainsNoWithdrawalsError({

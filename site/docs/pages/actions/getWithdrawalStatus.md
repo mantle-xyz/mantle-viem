@@ -108,3 +108,19 @@ const status = await publicClientL1.getWithdrawalStatus({
   portalAddress: '0xbEb5Fc579115071764c7423A4f12eDde41f106Ed', // [!code focus]
 })
 ```
+
+### withdrawal (optional)
+
+- **Type:** `Withdrawal`
+
+The withdrawal to check. Only needed for **migrated / pre-Tectonic withdrawals**: their transaction receipt has no `MessagePassed` event, so the withdrawal cannot be parsed from `receipt`. Reconstruct it with [`buildMigratedWithdrawal`](/actions/buildMigratedWithdrawal) and pass it here. For normal withdrawals it is parsed from the `receipt` and can be omitted.
+
+```ts
+const withdrawal = await publicClientL2.buildMigratedWithdrawal({ legacyTxHash })
+
+const status = await publicClientL1.getWithdrawalStatus({
+  receipt,
+  withdrawal, // [!code focus]
+  targetChain: mantle,
+})
+```

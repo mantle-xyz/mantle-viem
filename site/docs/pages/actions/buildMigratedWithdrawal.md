@@ -7,7 +7,7 @@ description: Reconstructs the Bedrock withdrawal for a pre-Tectonic (V1/OVM) wit
 
 Reconstructs the Bedrock `Withdrawal` for a withdrawal that was initiated before the Tectonic upgrade (V1/OVM) and migrated into the Bedrock `L2ToL1MessagePasser` during the upgrade.
 
-These migrated withdrawals were written into the new message passer's storage by state surgery and never emitted a Bedrock `MessagePassed` event, so [`getWithdrawals`](/utilities/getWithdrawals) cannot recover them from the original receipt. This action rebuilds the withdrawal struct so it can be passed to [`buildProveWithdrawal`](/actions/buildProveWithdrawal). Used in the [Withdrawal](/guides/withdrawals) flow for legacy withdrawals.
+These migrated withdrawals were written into the new message passer's storage by state surgery and never emitted a Bedrock `MessagePassed` event, so [`getWithdrawals`](/utilities/getWithdrawals) cannot recover them from the original receipt. This action rebuilds the withdrawal struct so it can be passed to [`buildProveWithdrawal`](/actions/buildProveWithdrawal) — and to [`getWithdrawalStatus`](/actions/getWithdrawalStatus) (via its `withdrawal` parameter) so the status can be resolved too. Used in the [Withdrawal](/guides/withdrawals) flow for legacy withdrawals.
 
 ## Usage
 

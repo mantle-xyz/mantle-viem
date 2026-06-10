@@ -1,10 +1,26 @@
+import { createClient, http, publicActions } from "viem";
 import { getTransactionReceipt, reset } from "viem/actions";
 import { expect, test, vi } from "vitest";
-import { anvilMantleSepolia, anvilSepolia } from "~test/src/anvil.js";
+import {
+	anvilMainnet,
+	anvilMantle,
+	anvilMantleSepolia,
+	anvilSepolia,
+} from "~test/src/anvil.js";
 
+import { mantle } from "../chains/index.js";
+import { ReceiptContainsNoWithdrawalsError } from "../errors/withdrawal.js";
+import { buildMigratedWithdrawal } from "./buildMigratedWithdrawal.js";
 import { getWithdrawalStatus } from "./getWithdrawalStatus.js";
 const sepoliaClient = anvilSepolia.getClient();
 const mantleSepoliaClient = anvilMantleSepolia.getClient();
+const mainnetClient = anvilMainnet.getClient();
+// Read-only upstream client for the legacy tx receipt + reconstruction (mirrors
+// buildMigratedWithdrawal.test): immutable history, no fork state is read.
+const mantleClient = createClient({
+	chain: mantle,
+	transport: http(anvilMantle.forkUrl),
+}).extend(publicActions);
 
 test.skip("waiting-to-prove", async () => {
 	await reset(sepoliaClient, {
@@ -119,3 +135,49 @@ test("finalized", async () => {
 	});
 	expect(status).toBe("finalized");
 });
+
+test(
+	"migrated (pre-Tectonic) withdrawal: resolves status when `withdrawal` is passed",
+	async () => {
+		// A V1/OVM MNT withdrawal migrated into the Bedrock L2ToL1MessagePasser at
+		// the Tectonic upgrade: its receipt has no `MessagePassed` event, so
+		// `getWithdrawals(receipt)` is empty. Callers reconstruct it with
+		// `buildMigratedWithdrawal` and pass it via the `withdrawal` parameter.
+		// https://mantlescan.xyz/tx/0xa1145ceb00b7e25091f5cb6ed18235a6893f7998e692aba3fcfecb6e4431ea76
+		const legacyTxHash =
+			"0xa1145ceb00b7e25091f5cb6ed18235a6893f7998e692aba3fcfecb6e4431ea76";
+		const receipt = await getTransactionReceipt(mantleClient, {
+			hash: legacyTxHash,
+		});
+		const withdrawal = await buildMigratedWithdrawal(mantleClient, {
+			legacyTxHash,
+		});
+
+		const status = await getWithdrawalStatus(mainnetClient, {
+			receipt,
+			withdrawal,
+			targetChain: mantle,
+		});
+		expect(status).toBe("ready-to-prove");
+	},
+	30_000,
+);
+
+test(
+	"migrated withdrawal: still throws when no `withdrawal` is provided (backward compat)",
+	async () => {
+		// Without the reconstructed withdrawal the receipt yields nothing, so the
+		// original behaviour is preserved: existing callers are unaffected.
+		const receipt = await getTransactionReceipt(mantleClient, {
+			hash: "0xa1145ceb00b7e25091f5cb6ed18235a6893f7998e692aba3fcfecb6e4431ea76",
+		});
+
+		await expect(
+			getWithdrawalStatus(mainnetClient, {
+				receipt,
+				targetChain: mantle,
+			}),
+		).rejects.toThrowError(ReceiptContainsNoWithdrawalsError);
+	},
+	30_000,
+);

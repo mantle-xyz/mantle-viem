@@ -515,6 +515,20 @@ if (status === 'ready-to-prove') {
 
 :::
 
+:::tip
+For **migrated / pre-Tectonic withdrawals** — whose receipt has no `MessagePassed` event — reconstruct the withdrawal with [`buildMigratedWithdrawal`](/actions/buildMigratedWithdrawal) and pass it as the `withdrawal` parameter to `getWithdrawalStatus` (and to `buildProveWithdrawal` / `finalizeWithdrawal`):
+
+```ts
+const withdrawal = await publicClientL2.buildMigratedWithdrawal({ legacyTxHash })
+
+const status = await publicClientL1.getWithdrawalStatus({
+  receipt,
+  withdrawal,
+  targetChain: walletClientL2.chain,
+})
+```
+:::
+
 ### 4. Finalize Withdrawal
 
 When the withdrawal transaction has been proved, we will then need to finalize that withdrawal on the L1.
