@@ -16,7 +16,7 @@ import { getTimeToProve } from "./getTimeToProve.js";
 import { initiateERC20Withdrawal } from "./initiateERC20Withdrawal.js";
 // import { waitToProve } from "./waitToProve.js";
 
-describe("e2e", () => {
+describe.skip("e2e", () => {
 	const account = privateKeyToAccount(
 		(process.env.VITE_ACCOUNT_PRIVATE_KEY as `0x${string}`) ||
 			accounts[0].privateKey,

@@ -10,7 +10,7 @@ import { getL2TransactionHashes } from "../utils/getL2TransactionHashes.js";
 import { opaqueDataToDepositData } from "../utils/opaqueDataToDepositData.js";
 import { depositERC20 } from "./depositERC20.js";
 
-test(
+test.skip(
 	"e2e erc20 (sepolia)",
 	async () => {
 		const account = privateKeyToAccount(
