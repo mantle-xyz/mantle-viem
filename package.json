@@ -1,6 +1,17 @@
 {
 	"name": "@mantleio/viem",
 	"version": "0.1.0-alpha.2",
+	"description": "Viem extension for the Mantle network — L1 ↔ L2 deposits, withdrawals, and fee estimation",
+	"keywords": [
+		"mantle",
+		"viem",
+		"ethereum",
+		"L2",
+		"rollup",
+		"bridge",
+		"web3",
+		"typescript"
+	],
 	"type": "module",
 	"main": "./dist/cjs/index.js",
 	"module": "./dist/esm/index.js",
