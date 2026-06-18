@@ -1,5 +1,11 @@
 # mantle-viem
 
+## 0.1.1
+
+### Patch Changes
+
+- Republish to ship the compiled output omitted from 0.1.0's npm package. 0.1.0 shipped a stale `dist/` (built before the migrated-withdrawal / latest-output work), so `buildMigratedWithdrawal` was missing and `getL2Output`'s `strategy` parameter and the `l1CrossDomainMessenger` chain config were absent at runtime despite being documented. No source changes.
+
 ## 0.1.0
 
 ### Minor Changes
