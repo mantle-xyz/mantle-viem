@@ -1,6 +1,6 @@
 {
 	"name": "@mantleio/viem",
-	"version": "0.1.0-alpha.2",
+	"version": "0.1.0",
 	"description": "Viem extension for the Mantle network — L1 ↔ L2 deposits, withdrawals, and fee estimation",
 	"keywords": [
 		"mantle",
@@ -53,9 +53,15 @@
 	},
 	"typesVersions": {
 		"*": {
-			"actions": ["./dist/types/actions/index.d.ts"],
-			"chains": ["./dist/types/chains/index.d.ts"],
-			"utils": ["./dist/types/utils/index.d.ts"]
+			"actions": [
+				"./dist/types/actions/index.d.ts"
+			],
+			"chains": [
+				"./dist/types/chains/index.d.ts"
+			],
+			"utils": [
+				"./dist/types/utils/index.d.ts"
+			]
 		}
 	},
 	"devDependencies": {
