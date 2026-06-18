@@ -1,6 +1,6 @@
 {
 	"name": "@mantleio/viem",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Viem extension for the Mantle network — L1 ↔ L2 deposits, withdrawals, and fee estimation",
 	"keywords": [
 		"mantle",
