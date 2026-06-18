@@ -1,11 +1,15 @@
 ---
 outline: deep
-description: Retrieves the first L2 output proposal that occurred after a provided block number.
+description: Retrieves an L2 output proposal covering a provided block number (latest by default).
 ---
 
 # getL2Output
 
-Retrieves the first L2 output proposal that occurred after a provided block number. Used for the [Withdrawal](/guides/withdrawals) flow.
+Retrieves an L2 output proposal that covers a provided L2 block number. Used for the [Withdrawal](/guides/withdrawals) flow.
+
+By default (`strategy: 'latest'`) it returns the **latest** committed output that covers the block. Proving against the latest output reads the storage proof at a recent L2 block, so it avoids an archive RPC dependency for old withdrawals — without changing the finalize waiting time (which is measured from the prove timestamp). Pass `strategy: 'earliest'` to restore the historical "first covering output" behaviour.
+
+With `strategy: 'latest'`, the call throws `LatestL2OutputNotReadyError` when no committed output yet covers the block (whereas `strategy: 'earliest'` reverts via the L2 Output Oracle). Both map to a `waiting-to-prove` status in [`getWithdrawalStatus`](/actions/getWithdrawalStatus).
 
 ## Usage
 
@@ -52,6 +56,21 @@ The L2 block number.
 ```ts
 const output = await publicClientL1.getL2Output({
   l2BlockNumber: 69420n, // [!code focus]
+  targetChain: mantle,
+})
+```
+
+### strategy (optional)
+
+- **Type:** `'latest' | 'earliest'`
+- **Default:** `'latest'`
+
+Which output to return for the given block. `'latest'` returns the most recently committed output covering the block (avoids an archive RPC dependency for old withdrawals); `'earliest'` returns the first covering output.
+
+```ts
+const output = await publicClientL1.getL2Output({
+  l2BlockNumber,
+  strategy: 'earliest', // [!code focus]
   targetChain: mantle,
 })
 ```

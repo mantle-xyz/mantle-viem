@@ -26,7 +26,7 @@ Withdrawals on the Mantle are a [two-step (plus one) process](https://www.mantle
 
 1. **Proving** the Withdrawal Transaction on the L1,
 
-> _Wait the 7 day finalization period_
+> _Wait the finalization period (read on-chain from `FINALIZATION_PERIOD_SECONDS`; ≈12 hours on Mantle mainnet)_
 
 2. **Finalizing** the Withdrawal Transaction on the L1.
 
@@ -515,11 +515,25 @@ if (status === 'ready-to-prove') {
 
 :::
 
+:::tip
+For **migrated / pre-Tectonic withdrawals** — whose receipt has no `MessagePassed` event — reconstruct the withdrawal with [`buildMigratedWithdrawal`](/actions/buildMigratedWithdrawal) and pass it as the `withdrawal` parameter to `getWithdrawalStatus` (and to `buildProveWithdrawal` / `finalizeWithdrawal`):
+
+```ts
+const withdrawal = await publicClientL2.buildMigratedWithdrawal({ legacyTxHash })
+
+const status = await publicClientL1.getWithdrawalStatus({
+  receipt,
+  withdrawal,
+  targetChain: walletClientL2.chain,
+})
+```
+:::
+
 ### 4. Finalize Withdrawal
 
 When the withdrawal transaction has been proved, we will then need to finalize that withdrawal on the L1.
 
-Before a withdrawal transaction can be finalized, we will need to wait the **finalization period** of **7 days** (1).
+Before a withdrawal transaction can be finalized, we will need to wait the **finalization period** (1). Mantle is a ZK validity rollup, so this period is short and is read on-chain from `FINALIZATION_PERIOD_SECONDS` (currently ≈12 hours on mainnet); `getTimeToFinalize` derives the remaining wait from it.
 
 After the finalization period has elapsed, we can finalize the withdrawal (2).
 

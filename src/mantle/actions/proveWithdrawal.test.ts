@@ -103,6 +103,7 @@ test.skip("e2e", async () => {
 
 	const output = await getL2Output(client_sepolia, {
 		l2BlockNumber: l2receipt.blockNumber,
+		strategy: "earliest",
 		targetChain: client_mantleSepolia.chain,
 	});
 

@@ -11,6 +11,7 @@ const mantleSepoliaClient = client.extend(publicActionsL2());
 test("default", async () => {
 	expect(publicActionsL2()(mantleSepoliaClient)).toMatchInlineSnapshot(`
 		{
+		  "buildMigratedWithdrawal": [Function],
 		  "buildProveWithdrawal": [Function],
 		  "estimateInitiateERC20Withdrawal": [Function],
 		  "estimateInitiateERC20WithdrawalFee": [Function],

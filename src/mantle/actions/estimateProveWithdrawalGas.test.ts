@@ -3,9 +3,10 @@ import { anvilMantleSepolia, anvilSepolia } from "~test/src/anvil.js";
 import { accounts } from "~test/src/constants.js";
 
 import { getTransactionReceipt, reset } from "viem/actions";
+import { getWithdrawals } from "../utils/getWithdrawals.js";
 import { buildProveWithdrawal } from "./buildProveWithdrawal.js";
 import { estimateProveWithdrawalGas } from "./estimateProveWithdrawalGas.js";
-import { waitToProve } from "./waitToProve.js";
+import { getL2Output } from "./getL2Output.js";
 
 const sepoliaClient = anvilSepolia.getClient();
 const mantleSepoliaClient = anvilMantleSepolia.getClient();
@@ -25,8 +26,11 @@ test("default", async () => {
 		hash: "0x90a949af815b4715ff6686a0dbafec0d3d9d7c33fe9911a3d172b5584e9f6cbb",
 	});
 
-	const { withdrawal, output } = await waitToProve(sepoliaClient, {
-		receipt,
+	const [withdrawal] = getWithdrawals(receipt);
+
+	const output = await getL2Output(sepoliaClient, {
+		l2BlockNumber: receipt.blockNumber,
+		strategy: "earliest",
 		targetChain: mantleSepoliaClient.chain,
 	});
 

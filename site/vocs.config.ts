@@ -56,6 +56,10 @@ export default defineConfig({
 			text: "L2 Public Actions",
 			items: [
 				{
+					text: "buildMigratedWithdrawal",
+					link: "/actions/buildMigratedWithdrawal",
+				},
+				{
 					text: "buildProveWithdrawal",
 					link: "/actions/buildProveWithdrawal",
 				},

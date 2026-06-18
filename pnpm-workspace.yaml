@@ -4,3 +4,10 @@ packages:
   - 'examples/**/*'
   - 'playgrounds/*'
   - 'site'
+allowBuilds:
+  '@biomejs/biome': true
+  '@parcel/watcher': true
+  dprint: true
+  esbuild: true
+  keccak: true
+  simple-git-hooks: true
