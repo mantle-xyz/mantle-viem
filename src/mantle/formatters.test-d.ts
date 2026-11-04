@@ -4,13 +4,16 @@ import { createPublicClient, http } from "viem";
 import type { Hash } from "viem";
 import { getBlock, getTransaction, getTransactionReceipt } from "viem/actions";
 import { mantle } from "./chains/index.js";
-import { formatters } from "./formatters.js";
+import type { formatters } from "./formatters.js";
 import type { OpStackRpcBlock } from "./types/block.js";
 
 describe("block", () => {
-	expectTypeOf(formatters.block.format)
-		.parameter(0)
-		.toEqualTypeOf<OpStackRpcBlock>();
+	// NB: native `Parameters<>` instead of `expectTypeOf().parameter(0)` —
+	// vitest ≥3 ships expect-type v1 whose `.parameter()` instantiation is too
+	// deep for viem's Formatter generics (TS2589).
+	expectTypeOf<
+		Parameters<typeof formatters.block.format>[0]
+	>().toEqualTypeOf<OpStackRpcBlock>();
 });
 
 describe("transaction", () => {
