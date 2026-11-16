@@ -30,23 +30,47 @@
 	],
 	"exports": {
 		".": {
-			"types": "./dist/types/index.d.ts",
-			"import": "./dist/esm/index.js",
+			"import": {
+				"types": "./dist/types/index.d.ts",
+				"default": "./dist/esm/index.js"
+			},
+			"require": {
+				"types": "./dist/types-cjs/index.d.ts",
+				"default": "./dist/cjs/index.js"
+			},
 			"default": "./dist/cjs/index.js"
 		},
 		"./actions": {
-			"types": "./dist/types/actions/index.d.ts",
-			"import": "./dist/esm/actions/index.js",
+			"import": {
+				"types": "./dist/types/actions/index.d.ts",
+				"default": "./dist/esm/actions/index.js"
+			},
+			"require": {
+				"types": "./dist/types-cjs/actions/index.d.ts",
+				"default": "./dist/cjs/actions/index.js"
+			},
 			"default": "./dist/cjs/actions/index.js"
 		},
 		"./chains": {
-			"types": "./dist/types/chains/index.d.ts",
-			"import": "./dist/esm/chains/index.js",
+			"import": {
+				"types": "./dist/types/chains/index.d.ts",
+				"default": "./dist/esm/chains/index.js"
+			},
+			"require": {
+				"types": "./dist/types-cjs/chains/index.d.ts",
+				"default": "./dist/cjs/chains/index.js"
+			},
 			"default": "./dist/cjs/chains/index.js"
 		},
 		"./utils": {
-			"types": "./dist/types/utils/index.d.ts",
-			"import": "./dist/esm/utils/index.js",
+			"import": {
+				"types": "./dist/types/utils/index.d.ts",
+				"default": "./dist/esm/utils/index.js"
+			},
+			"require": {
+				"types": "./dist/types-cjs/utils/index.d.ts",
+				"default": "./dist/cjs/utils/index.js"
+			},
 			"default": "./dist/cjs/utils/index.js"
 		},
 		"./package.json": "./package.json"
@@ -88,10 +112,12 @@
 		"wagmi": "^1.4.12"
 	},
 	"scripts": {
-		"build": "pnpm run clean && pnpm run build:cjs && pnpm run build:esm && pnpm run build:types",
+		"build": "pnpm run clean && pnpm run build:cjs && pnpm run build:esm && pnpm run build:types && pnpm run build:types-cjs",
 		"build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir ./dist/cjs --removeComments --verbatimModuleSyntax false && echo > ./dist/cjs/package.json '{\"type\":\"commonjs\"}'",
 		"build:esm": "tsc --project tsconfig.build.json --module es2015 --outDir ./dist/esm && echo > ./dist/esm/package.json '{\"type\":\"module\",\"sideEffects\":false}'",
 		"build:types": "tsc --project tsconfig.build.json --module esnext --outDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
+		"build:types-cjs": "node ./scripts/emit-cjs-types.mjs",
+		"check:package": "node ./scripts/check-package.mjs",
 		"release:check": "changeset status --verbose --since=origin/main",
 		"release:publish": "pnpm install && pnpm build && changeset publish",
 		"release:version": "changeset version && pnpm install --lockfile-only",
