@@ -1,11 +1,11 @@
 ---
 outline: deep
-description: Builds & prepares parameters for a withdrawal to be initiated on an L2.
+description: Estimates the time until an L2 output covering a provided L2 block number is submitted.
 ---
 
 # getTimeToNextL2Output
 
-Returns the time until the next L2 output (after a provided block number) is submitted. Used for the [Withdrawal](/guides/withdrawals) flow.
+Estimates the time until an L2 output covering a provided L2 block number is submitted. Used for the [Withdrawal](/guides/withdrawals) flow.
 
 ## Usage
 
