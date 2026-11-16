@@ -50,11 +50,13 @@ export const publicClientL2 = createPublicClient({
 
 ## Returns
 
-`{ interval: number, seconds: number, timestamp: number }`
+`{ interval: number, seconds: number, timestamp?: number }`
 
-- `interval` between L2 outputs – the max time to wait for transaction to be proved.
-- Estimated `seconds` until the transaction can be proved.
-- Estimated `timestamp` of when the transaction can be proved.
+- `interval`: the nominal time between L2 outputs, `SUBMISSION_INTERVAL × L2_BLOCK_TIME` read from the `L2OutputOracle`. It is the contract's minimum, not the proposer's actual cadence, and not a maximum wait.
+- `seconds`: estimated seconds until the transaction can be proved. It is `0` when the latest L2 output's block number is greater than or equal to the receipt's block number.
+- `timestamp`: estimated time when the transaction can be proved, or `undefined` when `seconds` is `0`.
+
+The estimate is a heuristic; actual proposal times can be earlier or later. `seconds` is also `0` when the local clock is behind the latest output's L1 timestamp, in which case `0` does not guarantee the withdrawal is ready. Use [`getWithdrawalStatus`](/actions/getWithdrawalStatus) to check.
 
 ## Parameters
 
@@ -67,7 +69,7 @@ The transaction receipt.
 ```ts
 const time = await publicClientL1.getTimeToProve({
   receipt, // [!code focus]
-  targetchain: mantle,
+  targetChain: mantle,
 })
 ```
 
@@ -79,8 +81,8 @@ The L2 chain.
 
 ```ts
 const time = await publicClientL1.getTimeToProve({
-  l2BlockNumber,
-  targetchain: mantle, // [!code focus]
+  receipt,
+  targetChain: mantle, // [!code focus]
 })
 ```
 
@@ -94,8 +96,8 @@ The buffer to account for discrepancies between non-deterministic time intervals
 ```ts
 const time = await publicClientL1.getTimeToProve({
   intervalBuffer: 1.2, // [!code focus]
-  l2BlockNumber,
-  targetchain: mantle,
+  receipt,
+  targetChain: mantle,
 })
 ```
 
@@ -110,7 +112,7 @@ If a `l2OutputOracleAddress` is provided, the `targetChain` parameter becomes op
 
 ```ts
 const time = await publicClientL1.getTimeToProve({
-  l2BlockNumber,
+  receipt,
   l2OutputOracleAddress: '0xbEb5Fc579115071764c7423A4f12eDde41f106Ed', // [!code focus]
 })
 ```
