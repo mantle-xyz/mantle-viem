@@ -27,13 +27,16 @@ export type GetTimeToNextL2OutputReturnType = {
 	/** The interval (in seconds) between L2 outputs. */
 	interval: number;
 	/**
-	 * Seconds until the next L2 output.
-	 * `0` if the next L2 output has already been submitted.
+	 * Estimated seconds until an L2 output covering `l2BlockNumber` is submitted.
+	 * `0` if the latest L2 output already covers it (its block number is greater
+	 * than or equal to `l2BlockNumber`). Also `0` when the local clock is behind
+	 * the latest output's L1 timestamp, in which case `0` does not guarantee the
+	 * block is covered.
 	 */
 	seconds: number;
 	/**
-	 * Estimated timestamp of the next L2 output.
-	 * `undefined` if the next L2 output has already been submitted.
+	 * Estimated timestamp of that L2 output.
+	 * `undefined` when `seconds` is `0`.
 	 */
 	timestamp?: number | undefined;
 };
@@ -111,19 +114,22 @@ export async function getTimeToNextL2Output<
 		// then we assume that the L2 output has already been submitted.
 		if (now < latestOutputTimestamp) return 0;
 
-		// If the latest L2 output block is newer than the provided L2 block number,
-		// then we assume that the L2 output has already been submitted.
-		if (latestOutput.l2BlockNumber > l2BlockNumber) return 0;
+		// If the latest L2 output covers the provided L2 block number (an output
+		// covers every block up to and including its own block number), then the
+		// L2 output has already been submitted.
+		if (latestOutput.l2BlockNumber >= l2BlockNumber) return 0;
 
+		// elapsedBlocks > 0 here.
 		const elapsedBlocks = Number(l2BlockNumber - latestOutput.l2BlockNumber);
 
 		const elapsed = Math.ceil((now - latestOutputTimestamp) / 1000);
 		const secondsToNextOutput =
 			intervalWithBuffer - (elapsed % intervalWithBuffer);
-		return elapsedBlocks < blockInterval
-			? secondsToNextOutput
-			: Math.floor(elapsedBlocks / Number(blockInterval)) * intervalWithBuffer +
-					secondsToNextOutput;
+		// The next output covers (latest, latest + interval], so a block exactly on
+		// an output boundary is covered by that output, not by the one after it.
+		const outputsAfterNext =
+			Math.ceil(elapsedBlocks / Number(blockInterval)) - 1;
+		return outputsAfterNext * intervalWithBuffer + secondsToNextOutput;
 	})();
 
 	const timestamp = seconds > 0 ? now + seconds * 1000 : undefined;
