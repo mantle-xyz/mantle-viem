@@ -53,15 +53,9 @@
 	},
 	"typesVersions": {
 		"*": {
-			"actions": [
-				"./dist/types/actions/index.d.ts"
-			],
-			"chains": [
-				"./dist/types/chains/index.d.ts"
-			],
-			"utils": [
-				"./dist/types/utils/index.d.ts"
-			]
+			"actions": ["./dist/types/actions/index.d.ts"],
+			"chains": ["./dist/types/chains/index.d.ts"],
+			"utils": ["./dist/types/utils/index.d.ts"]
 		}
 	},
 	"devDependencies": {
