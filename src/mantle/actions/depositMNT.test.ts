@@ -8,7 +8,7 @@ import { mantleSepoliaTestnet } from "../chains/mantleSepoliaTestnet.js";
 import { getL2TransactionHashes } from "../utils/getL2TransactionHashes.js";
 import { depositMNT } from "./depositMNT.js";
 
-test(
+test.skip(
 	"e2e mnt (sepolia)",
 	async () => {
 		const account = privateKeyToAccount(

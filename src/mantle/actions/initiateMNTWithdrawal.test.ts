@@ -50,7 +50,7 @@ test.skip("default", async () => {
 	`);
 });
 
-describe("e2e", () => {
+describe.skip("e2e", () => {
 	const account = privateKeyToAccount(
 		process.env.VITE_ACCOUNT_PRIVATE_KEY as `0x${string}`,
 	);

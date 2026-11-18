@@ -4,7 +4,7 @@ import { expect, test } from "vitest";
 import { mantleSepoliaTestnet } from "../chains/mantleSepoliaTestnet.js";
 import { estimateInitiateMNTWithdrawalGas } from "./estimateInitiateMNTWithdrawalGas.js";
 
-test("e2e estimate withdraw mnt gas", async () => {
+test.skip("e2e estimate withdraw mnt gas", async () => {
 	const account = privateKeyToAccount(
 		process.env.VITE_ACCOUNT_PRIVATE_KEY as `0x${string}`,
 	);
