@@ -48,7 +48,12 @@ export async function getPortalVersion<
 				address: portalAddress,
 				functionName: "version",
 			}),
-		{ cacheKey: ["portalVersion", portalAddress].join("."), cacheTime: 300 },
+		{
+			// Scoped per client: two clients (e.g. different chains or forks) may
+			// query the same portal address and must not share a version or error.
+			cacheKey: ["portalVersion", client.uid, portalAddress].join("."),
+			cacheTime: 300,
+		},
 	);
 
 	const [major, minor, patch] = version.split(".").map(Number);

@@ -1,11 +1,11 @@
 ---
 outline: deep
-description: Builds & prepares parameters for a withdrawal to be initiated on an L2.
+description: Estimates the time until an L2 output covering a provided L2 block number is submitted.
 ---
 
 # getTimeToNextL2Output
 
-Returns the time until the next L2 output (after a provided block number) is submitted. Used for the [Withdrawal](/guides/withdrawals) flow.
+Estimates the time until an L2 output covering a provided L2 block number is submitted. Used for the [Withdrawal](/guides/withdrawals) flow.
 
 ## Usage
 
@@ -48,11 +48,13 @@ export const publicClientL2 = createPublicClient({
 
 ## Returns
 
-`{ interval: number, seconds: number, timestamp: number }`
+`{ interval: number, seconds: number, timestamp?: number }`
 
-- `interval` between L2 outputs – the max time to wait for transaction to be proved.
-- Estimated `seconds` until the next L2 Output is submitted.
-- Estimated `timestamp` of the next L2 Output.
+- `interval`: the nominal time between L2 outputs, `SUBMISSION_INTERVAL × L2_BLOCK_TIME` read from the `L2OutputOracle`. It is the contract's minimum, not the proposer's actual cadence, and not a maximum wait.
+- `seconds`: estimated seconds until an L2 output covering `l2BlockNumber` is submitted. An output covers every L2 block up to and including its own block number, so `seconds` is `0` when the latest output's block number is greater than or equal to `l2BlockNumber`.
+- `timestamp`: estimated time of that output, or `undefined` when `seconds` is `0`.
+
+The estimate is a heuristic based on the contract interval plus a buffer; actual proposal times can be earlier or later. `seconds` is also `0` when the local clock is behind the latest output's L1 timestamp. In that case `0` does not guarantee the block is already covered; use [`getL2Output`](/actions/getL2Output) or [`getWithdrawalStatus`](/actions/getWithdrawalStatus) to check.
 
 ## Parameters
 
